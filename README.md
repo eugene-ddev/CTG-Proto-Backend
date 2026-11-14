@@ -13,7 +13,7 @@
 ```bash
 npm install
 npm run up        # собрать и поднять Nakama + Postgres
-npm run logs      # в логе: «CTG-Proto-Backend 0.1.0 ready, core …, self-test: …»
+npm run logs      # в логе: «CTG-Proto-Backend 0.2.0 ready, core …, self-test: …»
 npm run down
 ```
 
@@ -50,7 +50,9 @@ npm run check-core   # проверить, что src/shared совпадает 
 | --- | --- |
 | `src/main.ts` | `InitModule`: регистрация RPC и хуков, самопроверка логики при старте |
 | `src/rpc/<Домен>/*Rpc.ts` | RPC по доменам; лог до и после действия |
-| `src/lib` | ответы, версии, самопроверка |
+| `src/lib` | ответы, версии, самопроверка, `protectedRpc` (проверка входа, лог, ошибки) |
+| `src/entities/Player` | запись игрока: чтение, создание, стартовое состояние |
+| `src/hooks` | хуки Nakama |
 | `src/shared` | логика и конфиги прототипа (копия) |
 | `scripts/sync-core.mjs` | синхронизация `src/shared` |
 
@@ -59,3 +61,14 @@ npm run check-core   # проверить, что src/shared совпадает 
 | RPC | Вход | Выход |
 | --- | --- | --- |
 | `system/ping` | `{ selfTest?: boolean, seed?: number }` | `{ server, protocol, shared: { proto, digest }, time, selfTest? }` — `selfTest` считает бой двух ботов по seed |
+| `player/read` | `{}` | `{ state, rev, serverTime, server, protocol, shared }` — состояние игрока; нет записи — создаётся стартовое |
+| `player/sync` | `{ state, rev }` | `{ conflict: false, rev, serverTime }` или `{ conflict: true, state, rev, … }`, если `rev` устарел. **Временный (этап 1):** клиент присылает состояние целиком; на этапе 2 заменяется действиями |
+| `player/reset` | `{}` | как `player/read` — сброс к стартовому состоянию (отладка) |
+
+Хук `AfterAuthenticateDevice` (`src/hooks/initPlayer.ts`) создаёт игроку стартовое состояние при первом входе.
+
+## Хранение
+
+| Коллекция | Ключ | Что |
+| --- | --- | --- |
+| `player` | `state` | `{ state: PlayerState, rev, createdAt, updatedAt }` — всё состояние игрока (тип из `src/shared/core/state.ts`); пишет только сервер, `rev` растёт с каждой записью |

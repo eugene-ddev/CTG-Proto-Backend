@@ -41,7 +41,8 @@ for (const dir of DIRS) {
   }
 }
 const protoVersion = JSON.parse(fs.readFileSync(path.join(proto, 'package.json'), 'utf8')).version
-const digest = hashOf([...source.entries()].sort().map(([rel, text]) => `${rel}:${hashOf(text)}`).join('\n')).slice(0, 12)
+// тот же алгоритм, что в CTG-Proto/tools/core-digest.mjs — менять вместе
+const digest = hashOf([...source.entries()].map(([rel, text]) => `${rel}:${hashOf(text)}`).sort().join('\n')).slice(0, 12)
 source.set('version.json', `${JSON.stringify({ proto: protoVersion, digest }, null, 2)}\n`)
 
 const existing = new Set(DIRS.flatMap((dir) => listFiles(path.join(dest, dir)).map((rel) => `${dir}/${rel}`)))
