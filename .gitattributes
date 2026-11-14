@@ -1,0 +1,7 @@
+# скрипты и конфиги выкладки исполняются на Linux — только LF, даже при autocrlf на Windows
+*.sh text eol=lf
+*.yml text eol=lf
+Dockerfile text eol=lf
+*.Dockerfile text eol=lf
+deploy/Caddyfile text eol=lf
+.env.example text eol=lf

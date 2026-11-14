@@ -1,0 +1,17 @@
+# Один домен: API Nakama (/v2, /ws) и клиент (всё остальное). Сертификат Caddy получает сам.
+{$DOMAIN} {
+	encode zstd gzip
+
+	@api path /v2/* /ws /healthcheck
+	handle @api {
+		reverse_proxy nakama:7350
+	}
+
+	handle {
+		root * /srv
+		# index.html не кешируется — новая версия клиента подхватывается сразу; файлы сборки — с хешем в имени
+		header /index.html Cache-Control "no-cache"
+		header / Cache-Control "no-cache"
+		file_server
+	}
+}

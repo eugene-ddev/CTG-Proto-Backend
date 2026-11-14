@@ -1,0 +1,89 @@
+# Боевой запуск: Postgres + Nakama + Caddy (HTTPS, клиент и API на одном домене).
+# Запускается скриптами deploy/setup.sh и deploy/update.sh; секреты — в ../.env (вне репозитория).
+#   docker compose --env-file ../.env -f docker-compose.prod.yml up -d --build
+name: ctg-proto-prod
+
+services:
+  postgres:
+    image: postgres:12.2-alpine
+    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all
+    environment:
+      - POSTGRES_DB=nakama
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?нет POSTGRES_PASSWORD в .env}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nakama"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    # наружу не публикуется: база доступна только контейнерам
+    volumes:
+      - data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  nakama:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - SERVER_KEY=${SERVER_KEY:?нет SERVER_KEY в .env}
+      - HTTP_KEY=${HTTP_KEY:?нет HTTP_KEY в .env}
+      - SESSION_KEY=${SESSION_KEY:?нет SESSION_KEY в .env}
+      - REFRESH_KEY=${REFRESH_KEY:?нет REFRESH_KEY в .env}
+      - CONSOLE_USER=${CONSOLE_USER:-admin}
+      - CONSOLE_PASSWORD=${CONSOLE_PASSWORD:?нет CONSOLE_PASSWORD в .env}
+      - CONSOLE_SIGNING_KEY=${CONSOLE_SIGNING_KEY:?нет CONSOLE_SIGNING_KEY в .env}
+      - CTG_DEBUG=${CTG_DEBUG:-false}
+    # без -x: команда с секретами не должна попадать в лог
+    entrypoint:
+      - "/bin/sh"
+      - "-ec"
+      - >
+        DB="postgres:$$POSTGRES_PASSWORD@postgres:5432/nakama" &&
+        /nakama/nakama migrate up --database.address "$$DB" &&
+        exec /nakama/nakama --config /nakama/data/prod.yml --database.address "$$DB"
+        --socket.server_key "$$SERVER_KEY"
+        --runtime.http_key "$$HTTP_KEY"
+        --session.encryption_key "$$SESSION_KEY"
+        --session.refresh_encryption_key "$$REFRESH_KEY"
+        --console.username "$$CONSOLE_USER"
+        --console.password "$$CONSOLE_PASSWORD"
+        --console.signing_key "$$CONSOLE_SIGNING_KEY"
+        --runtime.env "CTG_DEBUG=$$CTG_DEBUG"
+    healthcheck:
+      test: ["CMD", "/nakama/nakama", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # консоль — только с самого сервера (заходить через SSH-туннель); API наружу отдаёт Caddy
+    ports:
+      - "127.0.0.1:7451:7351"
+    restart: unless-stopped
+
+  web:
+    # клиент собирается из соседней папки прототипа и раздаётся тем же Caddy, что проксирует API
+    build:
+      context: ../CTG-Proto
+      # путь к Dockerfile считается от контекста сборки
+      dockerfile: ../CTG-Proto-Backend/deploy/web.Dockerfile
+      args:
+        - VITE_NAKAMA_KEY=${SERVER_KEY}
+    depends_on:
+      - nakama
+    environment:
+      - DOMAIN=${DOMAIN:?нет DOMAIN в .env}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+
+volumes:
+  data:
+  caddy_data:
+  caddy_config:
