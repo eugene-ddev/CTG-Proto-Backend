@@ -1,4 +1,4 @@
-import { BLUEPRINTS, START, maxStackOf } from '@shared/data/catalog'
+import { BLUEPRINTS, ITEMS, START, maxStackOf } from '@shared/data/catalog'
 import { createInitialState, type PlayerState } from '@shared/core/state'
 
 export const makeFreshState = (): PlayerState =>
@@ -6,4 +6,5 @@ export const makeFreshState = (): PlayerState =>
     START,
     BLUEPRINTS.map((blueprint) => blueprint.id),
     (itemId) => maxStackOf(itemId),
+    ITEMS.map((item) => item.id),
   )

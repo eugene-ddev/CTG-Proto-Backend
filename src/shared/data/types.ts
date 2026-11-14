@@ -234,6 +234,8 @@ export interface StartConfig {
   /** Чертежи, открытые с начала игры (если не unlockAllBlueprints); остальные открываются пергаментом. */
   blueprints?: string[];
   inventory: Array<{ itemId: string; count: number }>;
+  /** Новый игрок получает все предметы игры, каждого — полную стопку (пока идёт разработка). Кубы — отдельно, `cubes`. */
+  allItems?: boolean;
 }
 
 /** Настройки боя (config/combat.json). */

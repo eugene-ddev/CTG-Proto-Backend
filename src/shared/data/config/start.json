@@ -1,5 +1,5 @@
 {
- "cubes": 300,
+ "cubes": 1500,
  "unlockAllBlueprints": false,
  "blueprints": [
   "bp-waran",
@@ -20,5 +20,6 @@
    "itemId": "restoreDexterityVial",
    "count": 5
   }
- ]
+ ],
+ "allItems": true
 }

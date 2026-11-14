@@ -224,7 +224,7 @@
   "description": "Восстанавливает 1 разбитый куб брони",
   "restoreStat": "Armor",
   "restoreAmount": 1,
-  "maxStack": 5,
+  "maxStack": 10,
   "tint": "#4a4a4a",
   "blueprintId": "bp-potion-vial"
  },
@@ -235,7 +235,7 @@
   "description": "Восстанавливает 1 разбитый куб силы",
   "restoreStat": "Strength",
   "restoreAmount": 1,
-  "maxStack": 5,
+  "maxStack": 10,
   "tint": "#d6090c",
   "blueprintId": "bp-potion-vial"
  },
@@ -246,7 +246,7 @@
   "description": "Восстанавливает 1 разбитый куб ловкости",
   "restoreStat": "Dexterity",
   "restoreAmount": 1,
-  "maxStack": 5,
+  "maxStack": 10,
   "tint": "#fec903",
   "blueprintId": "bp-potion-vial"
  },
@@ -257,7 +257,7 @@
   "description": "Восстанавливает 1 разбитый куб интеллекта",
   "restoreStat": "Intelligence",
   "restoreAmount": 1,
-  "maxStack": 5,
+  "maxStack": 10,
   "tint": "#1182ee",
   "blueprintId": "bp-potion-vial"
  },
@@ -268,7 +268,7 @@
   "description": "Восстанавливает 1 разбитый куб выносливости",
   "restoreStat": "Stamina",
   "restoreAmount": 1,
-  "maxStack": 5,
+  "maxStack": 10,
   "tint": "#05e716",
   "blueprintId": "bp-potion-vial"
  },
@@ -279,7 +279,7 @@
   "description": "Восстанавливает 1 разбитый куб удачи",
   "restoreStat": "Luck",
   "restoreAmount": 1,
-  "maxStack": 5,
+  "maxStack": 10,
   "tint": "#ff7000",
   "blueprintId": "bp-potion-vial"
  },
@@ -290,7 +290,7 @@
   "description": "Восстанавливает 3 разбитых куба брони",
   "restoreStat": "Armor",
   "restoreAmount": 3,
-  "maxStack": 5,
+  "maxStack": 10,
   "tint": "#4a4a4a",
   "blueprintId": "bp-potion-flask"
  },
@@ -301,7 +301,7 @@
   "description": "Восстанавливает 3 разбитых куба силы",
   "restoreStat": "Strength",
   "restoreAmount": 3,
-  "maxStack": 5,
+  "maxStack": 10,
   "tint": "#d6090c",
   "blueprintId": "bp-potion-flask"
  },
@@ -312,7 +312,7 @@
   "description": "Восстанавливает 3 разбитых куба ловкости",
   "restoreStat": "Dexterity",
   "restoreAmount": 3,
-  "maxStack": 5,
+  "maxStack": 10,
   "tint": "#fec903",
   "blueprintId": "bp-potion-flask"
  },
@@ -323,7 +323,7 @@
   "description": "Восстанавливает 3 разбитых куба интеллекта",
   "restoreStat": "Intelligence",
   "restoreAmount": 3,
-  "maxStack": 5,
+  "maxStack": 10,
   "tint": "#1182ee",
   "blueprintId": "bp-potion-flask"
  },
@@ -334,7 +334,7 @@
   "description": "Восстанавливает 3 разбитых куба выносливости",
   "restoreStat": "Stamina",
   "restoreAmount": 3,
-  "maxStack": 5,
+  "maxStack": 10,
   "tint": "#05e716",
   "blueprintId": "bp-potion-flask"
  },
@@ -345,7 +345,7 @@
   "description": "Восстанавливает 3 разбитых куба удачи",
   "restoreStat": "Luck",
   "restoreAmount": 3,
-  "maxStack": 5,
+  "maxStack": 10,
   "tint": "#ff7000",
   "blueprintId": "bp-potion-flask"
  },

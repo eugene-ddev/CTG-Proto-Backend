@@ -9,7 +9,7 @@ export const STATE_VERSION = 4;
 
 /** Ресурсы — предметы инвентаря (config/resources.json); стопка кубов — 100. */
 export const CUBE_ID = 'cube';
-export const CUBE_STACK = 100;
+export const CUBE_STACK = 500;
 export const SHARD_ID = 'cubeShard';
 export const SHARD_STACK = 100;
 export const WHETSTONE_ID = 'whetstone';
@@ -90,7 +90,11 @@ export interface PlayerState {
   bags: Bags;
 }
 
-export function createInitialState(start: StartConfig, allBlueprintIds: string[], maxStack: (itemId: string) => number): PlayerState {
+/**
+ * Состояние нового игрока. allItemIds — все предметы игры: с `start.allItems` каждый кладётся полной стопкой
+ * (кубы — отдельно, `start.cubes`).
+ */
+export function createInitialState(start: StartConfig, allBlueprintIds: string[], maxStack: (itemId: string) => number, allItemIds: string[] = []): PlayerState {
   let s: PlayerState = {
     version: STATE_VERSION,
     inventory: [],
@@ -103,6 +107,10 @@ export function createInitialState(start: StartConfig, allBlueprintIds: string[]
     bags: {},
   };
   s = addCubes(s, start.cubes);
+  if (start.allItems && allItemIds.length) {
+    for (const itemId of allItemIds) if (itemId !== CUBE_ID) s = addItem(s, itemId, maxStack(itemId), maxStack(itemId));
+    return s;
+  }
   for (const { itemId, count } of start.inventory) s = addItem(s, itemId, count, maxStack(itemId));
   return s;
 }

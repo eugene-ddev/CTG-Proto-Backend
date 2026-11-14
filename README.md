@@ -13,7 +13,7 @@
 ```bash
 npm install
 npm run up        # собрать и поднять Nakama + Postgres
-npm run logs      # в логе: «CTG-Proto-Backend 0.7.0 ready, core …, self-test: …»
+npm run logs      # в логе: «CTG-Proto-Backend 0.7.1 ready, core …, self-test: …»
 npm run down
 ```
 

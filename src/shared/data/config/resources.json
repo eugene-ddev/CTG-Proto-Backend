@@ -1,7 +1,47 @@
 [
- { "id": "cube", "kind": "resource", "name": "Куб", "description": "Из кубов собирается всё: персонажи, оружие, зелья. Сборка тратит кубы из инвентаря.", "icon": "cube", "tint": "#c9b48a", "maxStack": 100 },
- { "id": "cubeShard", "kind": "resource", "name": "Осколок куба", "description": "Остаётся от разбитых кубов врага. 6 осколков — 1 куб (кнопка «В кубы» в инвентаре).", "icon": "shard", "tint": "#b8a27a", "maxStack": 100 },
- { "id": "whetstone", "kind": "resource", "name": "Точильный камень", "description": "Прокачка оружия: уровень 2 — 10 камней, уровень 3 — 25. Каждый уровень даёт свойство удара. Дают за пройденную серию арены.", "icon": "whetstone", "tint": "#8f949a", "maxStack": 100 },
- { "id": "parchment", "kind": "resource", "name": "Чистый пергамент", "description": "Тратится на открытие чертежей. Изредка выпадает за пройденную серию арены.", "icon": "parchment", "tint": "#e9dcb8", "maxStack": 100 },
- { "id": "jewelerKit", "kind": "resource", "name": "Ювелирный набор", "description": "Создаёт ячейку под камень в оружии (до 3 ячеек). Изредка выпадает за пройденную серию арены.", "icon": "jeweler", "tint": "#d4a640", "maxStack": 100 }
+ {
+  "id": "cube",
+  "kind": "resource",
+  "name": "Куб",
+  "description": "Из кубов собирается всё: персонажи, оружие, зелья. Сборка тратит кубы из инвентаря.",
+  "icon": "cube",
+  "tint": "#c9b48a",
+  "maxStack": 500
+ },
+ {
+  "id": "cubeShard",
+  "kind": "resource",
+  "name": "Осколок куба",
+  "description": "Остаётся от разбитых кубов врага. 6 осколков — 1 куб (кнопка «В кубы» в инвентаре).",
+  "icon": "shard",
+  "tint": "#b8a27a",
+  "maxStack": 100
+ },
+ {
+  "id": "whetstone",
+  "kind": "resource",
+  "name": "Точильный камень",
+  "description": "Прокачка оружия: уровень 2 — 10 камней, уровень 3 — 25. Каждый уровень даёт свойство удара. Дают за пройденную серию арены.",
+  "icon": "whetstone",
+  "tint": "#8f949a",
+  "maxStack": 100
+ },
+ {
+  "id": "parchment",
+  "kind": "resource",
+  "name": "Чистый пергамент",
+  "description": "Тратится на открытие чертежей. Изредка выпадает за пройденную серию арены.",
+  "icon": "parchment",
+  "tint": "#e9dcb8",
+  "maxStack": 100
+ },
+ {
+  "id": "jewelerKit",
+  "kind": "resource",
+  "name": "Ювелирный набор",
+  "description": "Создаёт ячейку под камень в оружии (до 3 ячеек). Изредка выпадает за пройденную серию арены.",
+  "icon": "jeweler",
+  "tint": "#d4a640",
+  "maxStack": 100
+ }
 ]

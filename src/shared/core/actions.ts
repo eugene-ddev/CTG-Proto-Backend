@@ -132,7 +132,8 @@ export const ACTIONS = {
 
   // ── отладка (сервер исполняет только в режиме отладки) ──
   debugAddCubes: (s: S, _c: ActionCtx, amount: number): R => addCubes(s, Math.max(0, Math.min(10000, Math.floor(amount)))),
-  debugGiveAllItems: (s: S): R => ITEMS.filter((i) => i.blueprintId).reduce((acc, i) => addItem(acc, i.id, 1, maxStackOf(i.id)), s),
+  /** Все предметы игры, каждого — полная стопка (снаряжение — по одной штуке). */
+  debugGiveAllItems: (s: S): R => ITEMS.reduce((acc, i) => addItem(acc, i.id, maxStackOf(i.id), maxStackOf(i.id)), s),
   debugHeal: (s: S, _c: ActionCtx, charUid: string): R => healFull(s, charUid),
 } satisfies Record<string, (s: PlayerState, ctx: ActionCtx, ...args: never[]) => PlayerState | null>;
 
