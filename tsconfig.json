@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "types": [],
+    "target": "ES2017",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2019"],
+    "paths": {
+      "@shared/*": ["./src/shared/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@rpc/*": ["./src/rpc/*"]
+    },
+    "strict": true,
+    "esModuleInterop": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  },
+  "files": ["./node_modules/nakama-runtime/index.d.ts"],
+  "include": ["./src/**/*"]
+}

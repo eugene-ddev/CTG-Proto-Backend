@@ -1,0 +1,36 @@
+{
+ "weaponLevelSpread": 2,
+ "minWeaponLevel": 1,
+ "maxWeaponLevel": 3,
+ "artifactChance": 0.4,
+ "allowMana": false,
+ "manaCastsReserve": 2,
+ "statShares": {
+  "main": [
+   0.35,
+   0.5
+  ],
+  "Stamina": [
+   0.15,
+   0.25
+  ],
+  "Armor": [
+   0,
+   0.2
+  ],
+  "Luck": [
+   0,
+   0.2
+  ]
+ },
+ "rucksackChance": 0.6,
+ "bagItems": [
+  1,
+  4
+ ],
+ "spareWeaponChance": 0.3,
+ "potionStack": [
+  1,
+  3
+ ]
+}

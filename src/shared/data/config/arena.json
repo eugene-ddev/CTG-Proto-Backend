@@ -1,0 +1,57 @@
+{
+ "seriesLength": 3,
+ "retries": 3,
+ "reward": {
+  "cubes": 100,
+  "drops": [
+   {
+    "itemId": "whetstone",
+    "count": [
+     1,
+     5
+    ],
+    "weight": 65
+   },
+   {
+    "itemId": "parchment",
+    "count": [
+     1,
+     1
+    ],
+    "weight": 10
+   },
+   {
+    "itemId": "jewelerKit",
+    "count": [
+     1,
+     1
+    ],
+    "weight": 10
+   },
+   {
+    "itemId": "fireGem",
+    "count": [
+     1,
+     1
+    ],
+    "weight": 5
+   },
+   {
+    "itemId": "iceGem",
+    "count": [
+     1,
+     1
+    ],
+    "weight": 5
+   },
+   {
+    "itemId": "poisonGem",
+    "count": [
+     1,
+     1
+    ],
+    "weight": 5
+   }
+  ]
+ }
+}

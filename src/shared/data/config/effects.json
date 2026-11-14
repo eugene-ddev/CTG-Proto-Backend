@@ -1,0 +1,41 @@
+{
+ "burn": {
+  "kind": "Burn",
+  "name": "Горение",
+  "damageType": "Fire",
+  "duration": 3,
+  "interval": 1,
+  "damagePerTick": 30,
+  "spreadChance": 0.3,
+  "maxStacks": 3,
+  "removes": [
+   "freeze"
+  ]
+ },
+ "poison": {
+  "kind": "Poison",
+  "name": "Яд",
+  "damageType": "Poison",
+  "duration": 5,
+  "interval": 1,
+  "damagePerTick": 40,
+  "statMultiplier": 0.7,
+  "maxStacks": 3
+ },
+ "freeze": {
+  "kind": "Freeze",
+  "name": "Лёд",
+  "damageType": "Ice",
+  "duration": 2,
+  "interval": 1,
+  "damagePerTick": 10,
+  "durabilityMultiplier": 0.5,
+  "statDisabled": true,
+  "maxStacks": 1
+ },
+ "shield": {
+  "kind": "Shield",
+  "name": "Магический щит",
+  "duration": 1
+ }
+}

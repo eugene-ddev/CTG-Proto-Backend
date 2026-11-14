@@ -1,0 +1,161 @@
+{
+ "blockDurability": 100,
+ "hiddenBlueprints": [
+  "bp-gem",
+  "bp-magic-shield"
+ ],
+ "outOfRotation": [
+  "rustySpear",
+  "rustyKnife"
+ ],
+ "bagSize": 10,
+ "stamina": {
+  "regenBase": 2,
+  "regenShare": 1
+ },
+ "statThresholds": {
+  "share": 0.5,
+  "stats": [
+   "Strength",
+   "Dexterity",
+   "Intelligence",
+   "Luck"
+  ],
+  "strengthWeaponMultiplier": 0.6,
+  "staminaRegen": 1.5
+ },
+ "patterns": {
+  "precise": {
+   "armorIgnore": 0.5
+  },
+  "pierce": {
+   "depth": 2
+  }
+ },
+ "layout": {
+  "autoBuild": [
+   "Armor",
+   "Stamina",
+   "Luck",
+   "Strength",
+   "Dexterity",
+   "Intelligence"
+  ],
+  "bots": [
+   [
+    "Armor",
+    "Stamina",
+    "Luck",
+    "Strength",
+    "Dexterity",
+    "Intelligence"
+   ],
+   [
+    "Armor",
+    "Luck",
+    "Strength",
+    "Dexterity",
+    "Stamina",
+    "Intelligence"
+   ],
+   [
+    "Stamina",
+    "Armor",
+    "Strength",
+    "Dexterity",
+    "Luck",
+    "Intelligence"
+   ],
+   [
+    "Strength",
+    "Dexterity",
+    "Armor",
+    "Stamina",
+    "Luck",
+    "Intelligence"
+   ]
+  ]
+ },
+ "weaponLevels": {
+  "max": 3,
+  "extraShare": 0.4,
+  "cost": [
+   10,
+   25
+  ],
+  "perks": {
+   "rustyDagger": [
+    {
+     "armorIgnore": 1,
+     "hits": 3,
+     "damageMultiplier": 0.67
+    },
+    {
+     "armorIgnore": 1,
+     "critMultiplier": 3,
+     "hits": 3,
+     "damageMultiplier": 0.7
+    }
+   ],
+   "rustyKnife": [
+    {
+     "armorIgnore": 1
+    },
+    {
+     "armorIgnore": 1,
+     "critMultiplier": 3
+    }
+   ],
+   "rustySword": [
+    {
+     "sidesY": true
+    },
+    {
+     "sidesY": true,
+     "behind": 1
+    }
+   ],
+   "rustySpear": [
+    {
+     "depth": 3
+    },
+    {
+     "depth": 4,
+     "armorIgnore": 0.5
+    }
+   ],
+   "rustyAxe": [
+    {
+     "bothSides": true
+    },
+    {
+     "bothSides": true,
+     "behind": 2
+    }
+   ],
+   "rustyClub": [
+    {
+     "stun": 0.2
+    },
+    {
+     "stun": 0.35
+    }
+   ],
+   "rustyHammer": [
+    {
+     "diagonals": true,
+     "extraShare": 0.15
+    },
+    {
+     "diagonals": true,
+     "behind": 2,
+     "extraShare": 0.15
+    }
+   ]
+  }
+ },
+ "gemCells": {
+  "max": 3,
+  "itemId": "jewelerKit"
+ }
+}

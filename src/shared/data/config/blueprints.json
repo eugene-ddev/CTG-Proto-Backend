@@ -1,0 +1,7143 @@
+[
+ {
+  "id": "bp-lobster",
+  "kind": "character",
+  "name": "Лобстер",
+  "category": 3,
+  "statsPoints": 40,
+  "baseStats": {
+   "Armor": 0,
+   "Strength": 5,
+   "Stamina": 5,
+   "Intelligence": 0,
+   "Dexterity": 5,
+   "Luck": 0
+  },
+  "slots": [
+   {
+    "type": "Hand",
+    "pos": [
+     -2.35,
+     2.5,
+     -0.5
+    ],
+    "isLeftHand": true,
+    "scale": 0.8
+   },
+   {
+    "type": "Hand",
+    "pos": [
+     2.17,
+     2.5,
+     -0.5
+    ],
+    "isLeftHand": false,
+    "scale": 0.8
+   },
+   {
+    "type": "Artifact",
+    "pos": [
+     0,
+     2.5,
+     -2.0
+    ],
+    "isLeftHand": false,
+    "scale": 0.8
+   },
+   {
+    "type": "Artifact",
+    "pos": [
+     0,
+     2.5,
+     -4.0
+    ],
+    "isLeftHand": false,
+    "scale": 0.8
+   },
+   {
+    "type": "Artifact",
+    "pos": [
+     0,
+     2.5,
+     -6.0
+    ],
+    "isLeftHand": false,
+    "scale": 0.8
+   }
+  ],
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -1
+    ],
+    "rot": [
+     270.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -2
+    ],
+    "rot": [
+     270.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     2,
+     0,
+     0
+    ],
+    "rot": [
+     270.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -2,
+     0,
+     0
+    ],
+    "rot": [
+     270.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -3
+    ],
+    "rot": [
+     270.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -5
+    ],
+    "rot": [
+     270.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -4
+    ],
+    "rot": [
+     270.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -6
+    ],
+    "rot": [
+     270.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     -7
+    ],
+    "rot": [
+     270.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     -6
+    ],
+    "rot": [
+     270.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     -5
+    ],
+    "rot": [
+     270.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     1,
+     0
+    ],
+    "rot": [
+     90.0,
+     180.0,
+     0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     0,
+     -1
+    ],
+    "rot": [
+     90.0,
+     180.0,
+     0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     0,
+     -2
+    ],
+    "rot": [
+     90.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     1,
+     -2
+    ],
+    "rot": [
+     0,
+     90.0,
+     180.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     1,
+     -2
+    ],
+    "rot": [
+     0,
+     270.0,
+     180.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     1,
+     -3
+    ],
+    "rot": [
+     0,
+     90.0,
+     180.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     0,
+     -2
+    ],
+    "rot": [
+     0,
+     180.0,
+     0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     270.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     90.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     2,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     90.0,
+     90.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -2,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     270.0,
+     270.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     2,
+     0,
+     1
+    ],
+    "rot": [
+     0,
+     0,
+     270.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -2,
+     0,
+     1
+    ],
+    "rot": [
+     0,
+     0,
+     90.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     180.0,
+     90.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     180.0,
+     270.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     0,
+     -2
+    ],
+    "rot": [
+     0,
+     180.0,
+     0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     1,
+     -7
+    ],
+    "rot": [
+     0,
+     180.0,
+     180.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     0,
+     -8
+    ],
+    "rot": [
+     0,
+     180.0,
+     180.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     0,
+     -4
+    ],
+    "rot": [
+     0,
+     270.0,
+     0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     0,
+     -5
+    ],
+    "rot": [
+     0,
+     0,
+     90.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     0,
+     -5
+    ],
+    "rot": [
+     0,
+     0,
+     270.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     0,
+     -6
+    ],
+    "rot": [
+     0,
+     0,
+     90.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     0,
+     -6
+    ],
+    "rot": [
+     0,
+     0,
+     270.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     0,
+     -4
+    ],
+    "rot": [
+     0,
+     90.0,
+     0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     1,
+     -3
+    ],
+    "rot": [
+     0,
+     270.0,
+     180.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     1,
+     -4
+    ],
+    "rot": [
+     0,
+     90.0,
+     180.0
+    ]
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     1,
+     -4
+    ],
+    "rot": [
+     0,
+     270.0,
+     180.0
+    ]
+   }
+  ]
+ },
+ {
+  "id": "bp-waran",
+  "kind": "character",
+  "name": "Варан",
+  "category": 1,
+  "statsPoints": 30,
+  "baseStats": {
+   "Armor": 0,
+   "Strength": 5,
+   "Stamina": 5,
+   "Intelligence": 0,
+   "Dexterity": 5,
+   "Luck": 0
+  },
+  "slots": [
+   {
+    "type": "Hand",
+    "pos": [
+     -2.35,
+     2.5,
+     -0.5
+    ],
+    "isLeftHand": true,
+    "scale": 0.8
+   },
+   {
+    "type": "Hand",
+    "pos": [
+     2.17,
+     2.5,
+     -0.5
+    ],
+    "isLeftHand": false,
+    "scale": 0.8
+   },
+   {
+    "type": "Artifact",
+    "pos": [
+     0,
+     2.5,
+     -2.0
+    ],
+    "isLeftHand": false,
+    "scale": 0.8
+   },
+   {
+    "type": "Artifact",
+    "pos": [
+     0,
+     2.5,
+     -4.0
+    ],
+    "isLeftHand": false,
+    "scale": 0.8
+   },
+   {
+    "type": "Artifact",
+    "pos": [
+     0,
+     2.5,
+     -6.0
+    ],
+    "isLeftHand": false,
+    "scale": 0.8
+   }
+  ],
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     0
+    ],
+    "rot": [
+     90.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -1
+    ],
+    "rot": [
+     90.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -2
+    ],
+    "rot": [
+     90.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -3
+    ],
+    "rot": [
+     90.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -7
+    ],
+    "rot": [
+     90.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -4
+    ],
+    "rot": [
+     90.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -8
+    ],
+    "rot": [
+     90.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -5
+    ],
+    "rot": [
+     90.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -9
+    ],
+    "rot": [
+     90.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -6
+    ],
+    "rot": [
+     90.0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     1,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     270.0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     1,
+     -6
+    ],
+    "rot": [
+     0,
+     0,
+     270.0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -2,
+     1,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     270.0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -2,
+     1,
+     -6
+    ],
+    "rot": [
+     0,
+     0,
+     270.0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -2,
+     0,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -2,
+     0,
+     -6
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     1,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     90.0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     1,
+     -6
+    ],
+    "rot": [
+     0,
+     0,
+     90.0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     2,
+     1,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     90.0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     2,
+     1,
+     -6
+    ],
+    "rot": [
+     0,
+     0,
+     90.0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     2,
+     0,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     2,
+     0,
+     -6
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "id": "bp-sword",
+  "kind": "weapon",
+  "name": "Меч",
+  "itemId": "rustySword",
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     5,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     180
+    ],
+    "color": "#f2f2f2"
+   }
+  ],
+  "levelBlocks": [
+   [
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      0,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      -1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      5,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      6,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      -1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    }
+   ],
+   [
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      0,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      -1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      5,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      6,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      7,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      -1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      1,
+      2
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      1,
+      -2
+     ],
+     "rot": [
+      0,
+      180,
+      180
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      2,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      2,
+      -1
+     ],
+     "rot": [
+      0,
+      180,
+      180
+     ],
+     "color": "#f2f2f2"
+    }
+   ]
+  ]
+ },
+ {
+  "id": "bp-axe",
+  "kind": "weapon",
+  "name": "Топор",
+  "itemId": "rustyAxe",
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     4,
+     1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     2,
+     1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     5,
+     1
+    ],
+    "rot": [
+     0,
+     0,
+     180
+    ],
+    "color": "#f2f2f2"
+   }
+  ],
+  "levelBlocks": [
+   [
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      0,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      2,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      5,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      -1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      4,
+      -1
+     ],
+     "rot": [
+      0,
+      180,
+      0
+     ],
+     "color": "#f2f2f2"
+    }
+   ],
+   [
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      0,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      2,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      5,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      -1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      -1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      -1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      2,
+      -1
+     ],
+     "rot": [
+      0,
+      180,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      5,
+      -1
+     ],
+     "rot": [
+      0,
+      180,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      5,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    }
+   ]
+  ]
+ },
+ {
+  "id": "bp-club",
+  "kind": "weapon",
+  "name": "Булава",
+  "itemId": "rustyClub",
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     90,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     270,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     3,
+     1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     3,
+     -1
+    ],
+    "rot": [
+     0,
+     180,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     90,
+     180
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     270,
+     180
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     4,
+     1
+    ],
+    "rot": [
+     0,
+     0,
+     180
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     4,
+     -1
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#f2f2f2"
+   }
+  ],
+  "levelBlocks": [
+   [
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      0,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      1,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      -1,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      270,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      3,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      3,
+      -1
+     ],
+     "rot": [
+      0,
+      180,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      1,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      90,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      -1,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      270,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      4,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      4,
+      -1
+     ],
+     "rot": [
+      0,
+      180,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      5,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    }
+   ],
+   [
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      0,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      1,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      -1,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      270,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      3,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      3,
+      -1
+     ],
+     "rot": [
+      0,
+      180,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      1,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      -1,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      -1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      5,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      1,
+      5,
+      0
+     ],
+     "rot": [
+      0,
+      90,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      -1,
+      5,
+      0
+     ],
+     "rot": [
+      0,
+      270,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      5,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      5,
+      -1
+     ],
+     "rot": [
+      0,
+      180,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      6,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      -1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    }
+   ]
+  ]
+ },
+ {
+  "id": "bp-dagger",
+  "kind": "weapon",
+  "name": "Кинжал",
+  "itemId": "rustyDagger",
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     1,
+     1
+    ],
+    "rot": [
+     0,
+     0,
+     180
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     1,
+     -1
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     180
+    ],
+    "color": "#f2f2f2"
+   }
+  ],
+  "levelBlocks": [
+   [
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      0,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      1,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      1,
+      -1
+     ],
+     "rot": [
+      0,
+      180,
+      180
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      5,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    }
+   ],
+   [
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      0,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      1,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      1,
+      -1
+     ],
+     "rot": [
+      0,
+      180,
+      180
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      5,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      6,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      -1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      3,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    }
+   ]
+  ]
+ },
+ {
+  "id": "bp-hammer",
+  "kind": "weapon",
+  "name": "Молот",
+  "itemId": "rustyHammer",
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     4,
+     1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     4,
+     -1
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#f2f2f2"
+   }
+  ],
+  "levelBlocks": [
+   [
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      0,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      -1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      -1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      -1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    }
+   ],
+   [
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      0,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      -1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      -1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      -1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      2
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      2
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      -2
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      -2
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      5,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2b312"
+    }
+   ]
+  ]
+ },
+ {
+  "id": "bp-spear",
+  "kind": "weapon",
+  "name": "Копье",
+  "itemId": "rustySpear",
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     -2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     -1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     5,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     180
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     4,
+     1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   }
+  ],
+  "levelBlocks": [
+   [
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      -2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      -1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      0,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      5,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      4,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      4,
+      -1
+     ],
+     "rot": [
+      0,
+      180,
+      0
+     ],
+     "color": "#f2f2f2"
+    }
+   ],
+   [
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      -2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      -1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      0,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      5,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      6,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      4,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      4,
+      -1
+     ],
+     "rot": [
+      0,
+      180,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      5,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      5,
+      -1
+     ],
+     "rot": [
+      0,
+      180,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      -3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    }
+   ]
+  ]
+ },
+ {
+  "id": "bp-knife",
+  "kind": "weapon",
+  "name": "Нож",
+  "itemId": "rustyKnife",
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#f2f2f2"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     2,
+     1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2f2f2"
+   }
+  ],
+  "levelBlocks": [
+   [
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      0,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      5,
+      0
+     ],
+     "rot": [
+      0,
+      180,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      2,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    }
+   ],
+   [
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      0,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#974f17"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      2,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      3,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      4,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      5,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      6,
+      0
+     ],
+     "rot": [
+      0,
+      180,
+      180
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      2,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2f2f2"
+    },
+    {
+     "shape": "cube",
+     "pos": [
+      0,
+      -1,
+      0
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "color": "#f2b312"
+    },
+    {
+     "shape": "triangle",
+     "pos": [
+      0,
+      3,
+      1
+     ],
+     "rot": [
+      0,
+      0,
+      180
+     ],
+     "color": "#f2f2f2"
+    }
+   ]
+  ]
+ },
+ {
+  "id": "bp-magic-shield",
+  "kind": "artifact",
+  "name": "Артефакт магического щита",
+  "itemId": "magicShieldArtifact",
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1.0,
+     0.14
+    ],
+    "rot": [
+     0,
+     180.0,
+     0
+    ],
+    "quat": [
+     0,
+     1.0,
+     0,
+     0
+    ],
+    "color": "#1182ee"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1.0,
+     2.0,
+     0.14
+    ],
+    "rot": [
+     0,
+     0,
+     90.0
+    ],
+    "quat": [
+     0,
+     0,
+     -0.70711,
+     -0.70711
+    ],
+    "color": "#1182ee"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     0,
+     0.14
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "quat": [
+     0,
+     0,
+     0,
+     -1.0
+    ],
+    "color": "#1182ee"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1.0,
+     2.0,
+     0.14
+    ],
+    "rot": [
+     0,
+     0,
+     -90.0
+    ],
+    "quat": [
+     0,
+     0,
+     -0.70711,
+     0.70711
+    ],
+    "color": "#1182ee"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2.0,
+     0.14
+    ],
+    "rot": [
+     0,
+     180.0,
+     0
+    ],
+    "quat": [
+     0,
+     1.0,
+     0,
+     0
+    ],
+    "color": "#1182ee"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     3.0,
+     0.14
+    ],
+    "rot": [
+     -90.0,
+     180.0,
+     180.0
+    ],
+    "quat": [
+     0.70711,
+     0,
+     0,
+     -0.70711
+    ],
+    "color": "#1182ee"
+   }
+  ],
+  "modelScale": 0.5
+ },
+ {
+  "id": "bp-pouch",
+  "kind": "bag",
+  "name": "Подсумок",
+  "itemId": "pouch",
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     1,
+     -1
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     1,
+     -1
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     1,
+     -1
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2b312"
+   }
+  ]
+ },
+ {
+  "id": "bp-rucksack",
+  "kind": "bag",
+  "name": "Рюкзак",
+  "itemId": "rucksack",
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     1,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     2,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     3,
+     -1
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     0,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     3,
+     -1
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2b312"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     1,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     2,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     3,
+     -1
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     0,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   }
+  ]
+ },
+ {
+  "id": "bp-rucksack-large",
+  "kind": "bag",
+  "name": "Большой рюкзак",
+  "itemId": "rucksackLarge",
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     1,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     2,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     3,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     4,
+     -1
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     0,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     1,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     4,
+     -1
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2b312"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     1,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     2,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     3,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     4,
+     -1
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     0,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     1,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -2,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -2,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     2,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     2,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   }
+  ]
+ },
+ {
+  "id": "bp-rucksack-huge",
+  "kind": "bag",
+  "name": "Походный рюкзак",
+  "itemId": "rucksackHuge",
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     0,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     1,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     1,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     2,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     2,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     3,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     3,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     4,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     4,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     5,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     5,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1,
+     5,
+     -2
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1,
+     0,
+     -3
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     4,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     4,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     5,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     5,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     5,
+     -2
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     -3
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#f2b312"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     0,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     1,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     1,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     1,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     2,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     2,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     2,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     3,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     3,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     3,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     4,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     4,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     4,
+     -2
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     5,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     5,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1,
+     5,
+     -2
+    ],
+    "rot": [
+     0,
+     180,
+     180
+    ],
+    "color": "#974f17"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1,
+     0,
+     -3
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1,
+     -3
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -2,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     2,
+     0,
+     -1
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "color": "#6e3a12"
+   }
+  ]
+ },
+ {
+  "id": "bp-potion-vial",
+  "kind": "potion",
+  "name": "Малый флакон",
+  "variantLabel": "Стата",
+  "restoreAmount": 1,
+  "variants": [
+   {
+    "key": "Armor",
+    "label": "Броня",
+    "itemId": "restoreArmorVial",
+    "tint": "#4a4a4a"
+   },
+   {
+    "key": "Strength",
+    "label": "Сила",
+    "itemId": "restoreStrengthVial",
+    "tint": "#d6090c"
+   },
+   {
+    "key": "Dexterity",
+    "label": "Ловкость",
+    "itemId": "restoreDexterityVial",
+    "tint": "#fec903"
+   },
+   {
+    "key": "Intelligence",
+    "label": "Интеллект",
+    "itemId": "restoreIntelligenceVial",
+    "tint": "#1182ee"
+   },
+   {
+    "key": "Stamina",
+    "label": "Выносливость",
+    "itemId": "restoreStaminaVial",
+    "tint": "#05e716"
+   },
+   {
+    "key": "Luck",
+    "label": "Удача",
+    "itemId": "restoreLuckVial",
+    "tint": "#ff7000"
+   }
+  ],
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "quat": [
+     0,
+     0,
+     0,
+     1.0
+    ],
+    "color": "#ffffff",
+    "opacity": 0.7
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1.0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "quat": [
+     0,
+     0,
+     0,
+     1.0
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2.0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "quat": [
+     0,
+     0,
+     0,
+     1.0
+    ],
+    "tinted": true
+   }
+  ]
+ },
+ {
+  "id": "bp-potion-flask",
+  "kind": "potion",
+  "name": "Большой флакон",
+  "variantLabel": "Стата",
+  "restoreAmount": 3,
+  "variants": [
+   {
+    "key": "Armor",
+    "label": "Броня",
+    "itemId": "restoreArmorFlask",
+    "tint": "#4a4a4a"
+   },
+   {
+    "key": "Strength",
+    "label": "Сила",
+    "itemId": "restoreStrengthFlask",
+    "tint": "#d6090c"
+   },
+   {
+    "key": "Dexterity",
+    "label": "Ловкость",
+    "itemId": "restoreDexterityFlask",
+    "tint": "#fec903"
+   },
+   {
+    "key": "Intelligence",
+    "label": "Интеллект",
+    "itemId": "restoreIntelligenceFlask",
+    "tint": "#1182ee"
+   },
+   {
+    "key": "Stamina",
+    "label": "Выносливость",
+    "itemId": "restoreStaminaFlask",
+    "tint": "#05e716"
+   },
+   {
+    "key": "Luck",
+    "label": "Удача",
+    "itemId": "restoreLuckFlask",
+    "tint": "#ff7000"
+   }
+  ],
+  "blocks": [
+   {
+    "shape": "cube",
+    "pos": [
+     -1.0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     -90.0
+    ],
+    "quat": [
+     0,
+     0,
+     -0.70711,
+     0.70711
+    ],
+    "color": "#ffffff",
+    "opacity": 0.7
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2.0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "quat": [
+     0,
+     0,
+     0,
+     1.0
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1.0,
+     2.0,
+     0
+    ],
+    "rot": [
+     0,
+     90.0,
+     180.0
+    ],
+    "quat": [
+     -0.70711,
+     0,
+     -0.70711,
+     0
+    ],
+    "color": "#f2f2f2",
+    "opacity": 0.7
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1.0,
+     1.0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     180.0
+    ],
+    "quat": [
+     0,
+     0,
+     1.0,
+     2e-05
+    ],
+    "color": "#ffffff",
+    "opacity": 0.7
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1.0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "quat": [
+     0,
+     0,
+     0,
+     1.0
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     3.0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "quat": [
+     0,
+     0,
+     0,
+     1.0
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1.0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     90.0
+    ],
+    "quat": [
+     0,
+     0,
+     0.70709,
+     0.70712
+    ],
+    "color": "#ffffff",
+    "opacity": 0.7
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1.0,
+     1.0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     180.0
+    ],
+    "quat": [
+     0,
+     0,
+     1.0,
+     2e-05
+    ],
+    "color": "#ffffff",
+    "opacity": 0.7
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     0,
+     0
+    ],
+    "quat": [
+     0,
+     0,
+     0,
+     1.0
+    ],
+    "color": "#ffffff",
+    "opacity": 0.7
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1.0,
+     2.0,
+     0
+    ],
+    "rot": [
+     0,
+     -90.0,
+     180.0
+    ],
+    "quat": [
+     0.70711,
+     0,
+     -0.70711,
+     0
+    ],
+    "color": "#f2f2f2",
+    "opacity": 0.7
+   }
+  ]
+ },
+ {
+  "id": "bp-gem",
+  "kind": "gem",
+  "name": "Камень",
+  "variantLabel": "Стихия",
+  "variants": [
+   {
+    "key": "burn",
+    "label": "Огонь",
+    "itemId": "fireGem",
+    "tint": "#d6090c"
+   },
+   {
+    "key": "freeze",
+    "label": "Лёд",
+    "itemId": "iceGem",
+    "tint": "#1182ee"
+   },
+   {
+    "key": "poison",
+    "label": "Яд",
+    "itemId": "poisonGem",
+    "tint": "#05e716"
+   }
+  ],
+  "blocks": [
+   {
+    "shape": "triangle",
+    "pos": [
+     1.0,
+     0,
+     0
+    ],
+    "rot": [
+     90.0,
+     -161.6,
+     -108.4
+    ],
+    "quat": [
+     0.5,
+     -0.5,
+     0.5,
+     0.5
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     2.0,
+     -1.0
+    ],
+    "rot": [
+     0,
+     180.0,
+     -180.0
+    ],
+    "quat": [
+     1.0,
+     0,
+     0,
+     0
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     0,
+     -1.0
+    ],
+    "rot": [
+     90.0,
+     -104.3,
+     -104.3
+    ],
+    "quat": [
+     0.70711,
+     0,
+     0,
+     0.70711
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "rot": [
+     0,
+     90.0,
+     0
+    ],
+    "quat": [
+     0,
+     0.70711,
+     0,
+     0.70711
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1.0,
+     1.0,
+     -1.0
+    ],
+    "rot": [
+     0,
+     -180.0,
+     90.0
+    ],
+    "quat": [
+     -0.70711,
+     -0.70711,
+     0,
+     0
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     2.0,
+     1.0
+    ],
+    "rot": [
+     0,
+     0,
+     180.0
+    ],
+    "quat": [
+     0,
+     0,
+     1.0,
+     0
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1.0,
+     2.0,
+     0
+    ],
+    "rot": [
+     0,
+     90.0,
+     -180.0
+    ],
+    "quat": [
+     0.70711,
+     0,
+     0.70711,
+     0
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     -1.0,
+     1.0,
+     0
+    ],
+    "rot": [
+     0,
+     90.0,
+     -90.0
+    ],
+    "quat": [
+     -0.5,
+     0.5,
+     -0.5,
+     0.5
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1.0,
+     1.0,
+     1.0
+    ],
+    "rot": [
+     0,
+     -90.0,
+     90.0
+    ],
+    "quat": [
+     -0.5,
+     -0.5,
+     0.5,
+     0.5
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1.0,
+     1.0,
+     -1.0
+    ],
+    "rot": [
+     0,
+     90.0,
+     90.0
+    ],
+    "quat": [
+     -0.5,
+     -0.5,
+     -0.5,
+     -0.5
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1.0,
+     0
+    ],
+    "rot": [
+     0,
+     90.0,
+     0
+    ],
+    "quat": [
+     0,
+     0.70711,
+     0,
+     0.70711
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     1.0,
+     1.0,
+     0
+    ],
+    "rot": [
+     0,
+     90.0,
+     90.0
+    ],
+    "quat": [
+     0.5,
+     0.5,
+     0.5,
+     0.5
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     0,
+     0,
+     1.0
+    ],
+    "rot": [
+     90.0,
+     -105.1,
+     105.1
+    ],
+    "quat": [
+     0,
+     -0.70711,
+     0.70711,
+     0
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1.0,
+     -1.0
+    ],
+    "rot": [
+     0,
+     0,
+     -90.0
+    ],
+    "quat": [
+     0,
+     0,
+     -0.70711,
+     0.70711
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     2.0,
+     0
+    ],
+    "rot": [
+     0,
+     90.0,
+     0
+    ],
+    "quat": [
+     0,
+     0.70711,
+     0,
+     0.70711
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rot": [
+     0,
+     0,
+     90.0
+    ],
+    "quat": [
+     0,
+     0,
+     0.70711,
+     0.70711
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1.0,
+     0,
+     0
+    ],
+    "rot": [
+     90.0,
+     180.0,
+     104.0
+    ],
+    "quat": [
+     -0.5,
+     -0.5,
+     0.5,
+     -0.5
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "triangle",
+    "pos": [
+     -1.0,
+     2.0,
+     0
+    ],
+    "rot": [
+     0,
+     -90.0,
+     -180.0
+    ],
+    "quat": [
+     0.70711,
+     0,
+     -0.70711,
+     0
+    ],
+    "tinted": true
+   },
+   {
+    "shape": "cube",
+    "pos": [
+     0,
+     1.0,
+     1.0
+    ],
+    "rot": [
+     0,
+     180.0,
+     -90.0
+    ],
+    "quat": [
+     -0.70711,
+     0.70711,
+     0,
+     0
+    ],
+    "tinted": true
+   }
+  ]
+ }
+]

@@ -1,0 +1,24 @@
+{
+ "cubes": 300,
+ "unlockAllBlueprints": false,
+ "blueprints": [
+  "bp-waran",
+  "bp-sword",
+  "bp-potion-vial",
+  "bp-pouch"
+ ],
+ "inventory": [
+  {
+   "itemId": "restoreStrengthVial",
+   "count": 5
+  },
+  {
+   "itemId": "restoreArmorVial",
+   "count": 5
+  },
+  {
+   "itemId": "restoreDexterityVial",
+   "count": 5
+  }
+ ]
+}

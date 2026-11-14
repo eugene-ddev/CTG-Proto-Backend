@@ -1,0 +1,385 @@
+[
+ {
+  "id": "rustySword",
+  "kind": "weapon",
+  "name": "Меч",
+  "description": "Ржавый меч",
+  "slot": "Hand",
+  "scalingStat": "Dexterity",
+  "minStatRequired": 5,
+  "itemLevel": 1,
+  "gemSlots": 0,
+  "ability": {
+   "type": "Attack",
+   "cooldown": 2,
+   "staminaCost": 3.0,
+   "manaCost": 0.0,
+   "range": 1.0,
+   "damage": 240,
+   "effects": []
+  },
+  "pattern": "cleave",
+  "blueprintId": "bp-sword"
+ },
+ {
+  "id": "rustyAxe",
+  "kind": "weapon",
+  "name": "Топор",
+  "description": "Ржавый топор",
+  "slot": "Hand",
+  "scalingStat": "Strength",
+  "minStatRequired": 5,
+  "itemLevel": 1,
+  "gemSlots": 0,
+  "ability": {
+   "type": "Attack",
+   "cooldown": 2,
+   "staminaCost": 4.0,
+   "manaCost": 0.0,
+   "range": 1.0,
+   "damage": 223,
+   "effects": []
+  },
+  "pattern": "split",
+  "blueprintId": "bp-axe"
+ },
+ {
+  "id": "rustyClub",
+  "kind": "weapon",
+  "name": "Булава",
+  "description": "Ржавая булава",
+  "slot": "Hand",
+  "scalingStat": "Strength",
+  "minStatRequired": 5,
+  "itemLevel": 1,
+  "gemSlots": 0,
+  "ability": {
+   "type": "Attack",
+   "cooldown": 2,
+   "staminaCost": 4.0,
+   "manaCost": 0.0,
+   "range": 1.0,
+   "damage": 220,
+   "effects": []
+  },
+  "pattern": "crush",
+  "blueprintId": "bp-club"
+ },
+ {
+  "id": "rustyDagger",
+  "kind": "weapon",
+  "name": "Кинжал",
+  "description": "Ржавый кинжал",
+  "slot": "Hand",
+  "scalingStat": "Dexterity",
+  "minStatRequired": 5,
+  "itemLevel": 1,
+  "gemSlots": 0,
+  "ability": {
+   "type": "Attack",
+   "cooldown": 1,
+   "staminaCost": 4.5,
+   "manaCost": 0.0,
+   "range": 0.5,
+   "damage": 36,
+   "effects": [],
+   "hits": 2
+  },
+  "pattern": "precise",
+  "blueprintId": "bp-dagger"
+ },
+ {
+  "id": "rustyHammer",
+  "kind": "weapon",
+  "name": "Молот",
+  "description": "Ржавый молот",
+  "slot": "Hand",
+  "scalingStat": "Strength",
+  "minStatRequired": 5,
+  "itemLevel": 1,
+  "gemSlots": 0,
+  "ability": {
+   "type": "Attack",
+   "cooldown": 2,
+   "staminaCost": 5.5,
+   "manaCost": 0.0,
+   "range": 1.0,
+   "damage": 262,
+   "effects": []
+  },
+  "pattern": "crush",
+  "blueprintId": "bp-hammer"
+ },
+ {
+  "id": "rustySpear",
+  "kind": "weapon",
+  "name": "Копье",
+  "description": "Ржавое копье",
+  "slot": "Hand",
+  "scalingStat": "Dexterity",
+  "minStatRequired": 5,
+  "itemLevel": 1,
+  "gemSlots": 0,
+  "ability": {
+   "type": "Attack",
+   "cooldown": 2,
+   "staminaCost": 5.0,
+   "manaCost": 0.0,
+   "range": 2.0,
+   "damage": 155,
+   "effects": []
+  },
+  "pattern": "pierce",
+  "blueprintId": "bp-spear"
+ },
+ {
+  "id": "rustyKnife",
+  "kind": "weapon",
+  "slot": "Hand",
+  "itemLevel": 1,
+  "gemSlots": 0,
+  "name": "Нож",
+  "description": "Ржавый нож. Черновые характеристики — в Unity нет ассета.",
+  "scalingStat": "Dexterity",
+  "minStatRequired": 5,
+  "ability": {
+   "type": "Attack",
+   "cooldown": 1,
+   "staminaCost": 2,
+   "manaCost": 0,
+   "range": 0.5,
+   "damage": 85,
+   "effects": []
+  },
+  "pattern": "precise",
+  "blueprintId": "bp-knife"
+ },
+ {
+  "id": "magicShieldArtifact",
+  "kind": "artifact",
+  "name": "Артефакт магического щита",
+  "description": "Артефакт магического щита",
+  "slot": "Artifact",
+  "scalingStat": "Intelligence",
+  "minStatRequired": 0,
+  "itemLevel": 1,
+  "gemSlots": 0,
+  "ability": {
+   "type": "ApplyEffect",
+   "cooldown": 2,
+   "staminaCost": 0.0,
+   "manaCost": 3.0,
+   "range": 3.0,
+   "damage": 20,
+   "effects": [
+    "shield"
+   ]
+  },
+  "blueprintId": "bp-magic-shield"
+ },
+ {
+  "id": "pouch",
+  "kind": "bag",
+  "name": "Подсумок",
+  "description": "Лут и зелья на арене — 3 ячейки",
+  "slot": "Rucksack",
+  "capacity": 3,
+  "unused": false,
+  "blueprintId": "bp-pouch"
+ },
+ {
+  "id": "rucksack",
+  "kind": "bag",
+  "name": "Рюкзак",
+  "description": "Лут и зелья на арене — 6 ячеек",
+  "slot": "Rucksack",
+  "capacity": 6,
+  "unused": false,
+  "blueprintId": "bp-rucksack"
+ },
+ {
+  "id": "rucksackLarge",
+  "kind": "bag",
+  "name": "Большой рюкзак",
+  "description": "Лут и зелья на арене — 12 ячеек",
+  "slot": "Rucksack",
+  "capacity": 12,
+  "unused": false,
+  "blueprintId": "bp-rucksack-large"
+ },
+ {
+  "id": "rucksackHuge",
+  "kind": "bag",
+  "name": "Походный рюкзак",
+  "description": "Лут и зелья на арене — 18 ячеек",
+  "slot": "Rucksack",
+  "capacity": 18,
+  "unused": false,
+  "blueprintId": "bp-rucksack-huge"
+ },
+ {
+  "id": "restoreArmorVial",
+  "kind": "potion",
+  "name": "Малый флакон брони",
+  "description": "Восстанавливает 1 разбитый куб брони",
+  "restoreStat": "Armor",
+  "restoreAmount": 1,
+  "maxStack": 5,
+  "tint": "#4a4a4a",
+  "blueprintId": "bp-potion-vial"
+ },
+ {
+  "id": "restoreStrengthVial",
+  "kind": "potion",
+  "name": "Малый флакон силы",
+  "description": "Восстанавливает 1 разбитый куб силы",
+  "restoreStat": "Strength",
+  "restoreAmount": 1,
+  "maxStack": 5,
+  "tint": "#d6090c",
+  "blueprintId": "bp-potion-vial"
+ },
+ {
+  "id": "restoreDexterityVial",
+  "kind": "potion",
+  "name": "Малый флакон ловкости",
+  "description": "Восстанавливает 1 разбитый куб ловкости",
+  "restoreStat": "Dexterity",
+  "restoreAmount": 1,
+  "maxStack": 5,
+  "tint": "#fec903",
+  "blueprintId": "bp-potion-vial"
+ },
+ {
+  "id": "restoreIntelligenceVial",
+  "kind": "potion",
+  "name": "Малый флакон интеллекта",
+  "description": "Восстанавливает 1 разбитый куб интеллекта",
+  "restoreStat": "Intelligence",
+  "restoreAmount": 1,
+  "maxStack": 5,
+  "tint": "#1182ee",
+  "blueprintId": "bp-potion-vial"
+ },
+ {
+  "id": "restoreStaminaVial",
+  "kind": "potion",
+  "name": "Малый флакон выносливости",
+  "description": "Восстанавливает 1 разбитый куб выносливости",
+  "restoreStat": "Stamina",
+  "restoreAmount": 1,
+  "maxStack": 5,
+  "tint": "#05e716",
+  "blueprintId": "bp-potion-vial"
+ },
+ {
+  "id": "restoreLuckVial",
+  "kind": "potion",
+  "name": "Малый флакон удачи",
+  "description": "Восстанавливает 1 разбитый куб удачи",
+  "restoreStat": "Luck",
+  "restoreAmount": 1,
+  "maxStack": 5,
+  "tint": "#ff7000",
+  "blueprintId": "bp-potion-vial"
+ },
+ {
+  "id": "restoreArmorFlask",
+  "kind": "potion",
+  "name": "Большой флакон брони",
+  "description": "Восстанавливает 3 разбитых куба брони",
+  "restoreStat": "Armor",
+  "restoreAmount": 3,
+  "maxStack": 5,
+  "tint": "#4a4a4a",
+  "blueprintId": "bp-potion-flask"
+ },
+ {
+  "id": "restoreStrengthFlask",
+  "kind": "potion",
+  "name": "Большой флакон силы",
+  "description": "Восстанавливает 3 разбитых куба силы",
+  "restoreStat": "Strength",
+  "restoreAmount": 3,
+  "maxStack": 5,
+  "tint": "#d6090c",
+  "blueprintId": "bp-potion-flask"
+ },
+ {
+  "id": "restoreDexterityFlask",
+  "kind": "potion",
+  "name": "Большой флакон ловкости",
+  "description": "Восстанавливает 3 разбитых куба ловкости",
+  "restoreStat": "Dexterity",
+  "restoreAmount": 3,
+  "maxStack": 5,
+  "tint": "#fec903",
+  "blueprintId": "bp-potion-flask"
+ },
+ {
+  "id": "restoreIntelligenceFlask",
+  "kind": "potion",
+  "name": "Большой флакон интеллекта",
+  "description": "Восстанавливает 3 разбитых куба интеллекта",
+  "restoreStat": "Intelligence",
+  "restoreAmount": 3,
+  "maxStack": 5,
+  "tint": "#1182ee",
+  "blueprintId": "bp-potion-flask"
+ },
+ {
+  "id": "restoreStaminaFlask",
+  "kind": "potion",
+  "name": "Большой флакон выносливости",
+  "description": "Восстанавливает 3 разбитых куба выносливости",
+  "restoreStat": "Stamina",
+  "restoreAmount": 3,
+  "maxStack": 5,
+  "tint": "#05e716",
+  "blueprintId": "bp-potion-flask"
+ },
+ {
+  "id": "restoreLuckFlask",
+  "kind": "potion",
+  "name": "Большой флакон удачи",
+  "description": "Восстанавливает 3 разбитых куба удачи",
+  "restoreStat": "Luck",
+  "restoreAmount": 3,
+  "maxStack": 5,
+  "tint": "#ff7000",
+  "blueprintId": "bp-potion-flask"
+ },
+ {
+  "id": "fireGem",
+  "kind": "gem",
+  "name": "Камень огня",
+  "description": "Накладывает горение",
+  "effects": [
+   "burn"
+  ],
+  "tint": "#d6090c",
+  "blueprintId": "bp-gem"
+ },
+ {
+  "id": "iceGem",
+  "kind": "gem",
+  "name": "Камень льда",
+  "description": "Накладывает заморозку",
+  "effects": [
+   "freeze"
+  ],
+  "tint": "#1182ee",
+  "blueprintId": "bp-gem"
+ },
+ {
+  "id": "poisonGem",
+  "kind": "gem",
+  "name": "Камень яда",
+  "description": "Накладывает яд",
+  "effects": [
+   "poison"
+  ],
+  "tint": "#05e716",
+  "blueprintId": "bp-gem"
+ }
+]
