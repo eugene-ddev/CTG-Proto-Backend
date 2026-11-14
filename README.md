@@ -13,7 +13,7 @@
 ```bash
 npm install
 npm run up        # собрать и поднять Nakama + Postgres
-npm run logs      # в логе: «CTG-Proto-Backend 0.5.0 ready, core …, self-test: …»
+npm run logs      # в логе: «CTG-Proto-Backend 0.6.0 ready, core …, self-test: …»
 npm run down
 ```
 
@@ -65,6 +65,7 @@ npm run check-core   # проверить, что src/shared совпадает 
 | `player/act` | `{ rev, actions: [{ name, args, now, seed }] }` | `{ ok: true, rev, hash, state? }` — действия исполнены (`hash` — отпечаток состояния для сверки); `{ ok: false, reason: 'rejected' \| 'conflict', state, rev, action? }` — действие отклонено или ревизия устарела, клиент берёт состояние сервера. Пачка исполняется целиком или не исполняется вовсе |
 | `player/reset` | `{}` | как `player/read` — сброс к стартовому состоянию; только в режиме отладки |
 | `arena/opponents` | `{}` | `{ me: { rating, wins, losses }, opponents: [{ userId, name, rating, wins, losses, winDelta, loseDelta, snapshot }] }` — до 30 игроков с бойцом, ближайшие по рейтингу; `winDelta` / `loseDelta` — изменение рейтинга вызывающего |
+| `arena/leaderboard` | `{}` | `{ total, me, top, around }` — первые 50 строк таблицы рейтинга (`rank, name, rating, wins, losses, me`); если игрок не в них — `around`: 7 строк вокруг его места |
 | `arena/challenge` | `{ userId, charUid }` | `{ state, rev }` — начата серия с игроками или выбран соперник следующего её боя: в `arenaRun.opp.player` — снимок бойца соперника и рейтинги обоих |
 
 Хук `AfterAuthenticateDevice` (`src/hooks/initPlayer.ts`) создаёт игроку стартовое состояние при первом входе.

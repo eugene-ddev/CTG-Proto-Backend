@@ -5,6 +5,7 @@ import { resetPlayerRpc } from '@rpc/Player/resetPlayerRpc'
 import { initPlayer } from './hooks/initPlayer'
 import { opponentsRpc } from '@rpc/Arena/opponentsRpc'
 import { challengeRpc } from '@rpc/Arena/challengeRpc'
+import { leaderboardRpc } from '@rpc/Arena/leaderboardRpc'
 import { ensureRatingLeaderboard } from './entities/Arena/leaderboard'
 import { SERVER_VERSION, SHARED_VERSION } from '@lib/version'
 import { runSelfTest } from '@lib/selfTest'
@@ -20,6 +21,7 @@ const InitModule: nkruntime.InitModule = function (_ctx, logger, nk, initializer
   initializer.registerRpc('player/reset', resetPlayerRpc)
   initializer.registerRpc('arena/opponents', opponentsRpc)
   initializer.registerRpc('arena/challenge', challengeRpc)
+  initializer.registerRpc('arena/leaderboard', leaderboardRpc)
 
   const check = runSelfTest(42)
   logger.info(
