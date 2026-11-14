@@ -1,25 +1,18 @@
 import { activeCharacter, snapshotOf, type FighterSnapshot } from '@shared/core/arena'
-import type { PlayerState } from '@shared/core/state'
 import type { IPlayerRecord } from '../Player/types'
 import { FIGHTER_COLLECTION, FIGHTER_KEY } from './constants'
-import { ratingOf, writeRating } from './leaderboard'
 
 export interface IFighterRecord {
   snapshot: FighterSnapshot | null
   updatedAt: number
 }
 
-const publicKey = (state: PlayerState, username: string): string => {
-  const fighter = activeCharacter(state)
-  const stats = state.pvp || { wins: 0, losses: 0 }
-  return JSON.stringify([username, ratingOf(state), stats.wins, stats.losses, fighter ? snapshotOf(fighter) : null])
-}
-
-export function withPublished(nk: nkruntime.Nakama, userId: string, username: string, record: IPlayerRecord): IPlayerRecord {
-  const key = publicKey(record.state, username)
-  if (record.pub === key) return record
+export function withPublished(nk: nkruntime.Nakama, userId: string, record: IPlayerRecord): IPlayerRecord {
   const fighter = activeCharacter(record.state)
-  const value: IFighterRecord = { snapshot: fighter ? snapshotOf(fighter) : null, updatedAt: Date.now() }
+  const snapshot = fighter ? snapshotOf(fighter) : null
+  const key = JSON.stringify(snapshot)
+  if (record.pub === key) return record
+  const value: IFighterRecord = { snapshot, updatedAt: Date.now() }
   nk.storageWrite([
     {
       collection: FIGHTER_COLLECTION,
@@ -30,7 +23,6 @@ export function withPublished(nk: nkruntime.Nakama, userId: string, username: st
       permissionWrite: 0,
     },
   ])
-  writeRating(nk, userId, username, record.state)
   return { ...record, pub: key }
 }
 

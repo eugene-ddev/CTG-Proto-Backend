@@ -1,13 +1,12 @@
 import { protectedRpc } from '@lib/protectedRpc'
 import { ratingDeltas } from '@shared/core/rating'
 import { OPPONENTS_LIMIT, OPPONENTS_SCAN, RATING_LEADERBOARD } from '../../entities/Arena/constants'
-import { ratingOf } from '../../entities/Arena/leaderboard'
+import { ensureProfile } from '../../entities/Arena/profile'
 import { readSnapshots } from '../../entities/Arena/publish'
-import { readOrCreatePlayer } from '../../entities/Player/storage'
 
-export const opponentsRpc = protectedRpc('arena/opponents', (userId, _payload, _ctx, _logger, nk) => {
-  const mine = readOrCreatePlayer(nk, userId).record.state
-  const myRating = ratingOf(mine)
+export const opponentsRpc = protectedRpc('arena/opponents', (userId, _payload, ctx, _logger, nk) => {
+  const me = ensureProfile(nk, userId, ctx.username || '')
+  const myRating = me.rating
   const list = nk.leaderboardRecordsList(RATING_LEADERBOARD, undefined, OPPONENTS_SCAN)
   const records = (list.records || []).filter((record) => record.ownerId !== userId)
   const snapshots = readSnapshots(
@@ -32,6 +31,5 @@ export const opponentsRpc = protectedRpc('arena/opponents', (userId, _payload, _
     })
     .sort((first, second) => Math.abs(first.rating - myRating) - Math.abs(second.rating - myRating))
     .slice(0, OPPONENTS_LIMIT)
-  const stats = mine.pvp || { wins: 0, losses: 0 }
-  return JSON.stringify({ me: { rating: myRating, wins: stats.wins, losses: stats.losses }, opponents })
+  return JSON.stringify({ me, opponents })
 })

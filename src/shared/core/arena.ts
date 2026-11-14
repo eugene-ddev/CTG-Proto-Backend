@@ -15,7 +15,7 @@ import { bagSlots, characterStats, discardFromBag, itemOf, lv, requirementGap } 
 import { SHARD_ID, addCubes, addItem, itemCount, spendCubes, takeItems, uid, type CharacterState, type PlayerState } from './state';
 import { createRng, randomSeed } from './rng';
 import { clockNow } from './clock';
-import { RATING_START, ratingAfter, ratingDeltas } from './rating';
+import { RATING_START, ratingDeltas } from './rating';
 import { playerWeaponLevel, recordOpponent } from './opponent';
 import { bagDraws, drawInt, replayDraws, rngDraws, type Bags, type DrawLog, type DrawSource } from './bag';
 
@@ -76,8 +76,22 @@ export interface InboxEntry {
   /** Защитник отбился. */
   won: boolean;
   ratingDelta: number;
+  /** Награда за отбитое нападение — ждёт, пока игрок заберёт её из журнала. */
   reward?: SeriesReward;
 }
+
+/**
+ * Арена игрока вне его состояния: рейтинг (Эло), счёт боёв с игроками и журнал нападений. Отдельная запись на
+ * сервере — её меняют и свои бои, и чужие нападения, состояние игрока при этом не трогается.
+ */
+export interface ArenaProfile {
+  rating: number;
+  wins: number;
+  losses: number;
+  inbox: InboxEntry[];
+}
+
+export const freshArenaProfile = (): ArenaProfile => ({ rating: RATING_START, wins: 0, losses: 0, inbox: [] });
 
 /** Снимок бойца. */
 export function snapshotOf(c: CharacterState): FighterSnapshot {
@@ -304,17 +318,14 @@ const getBlueprintOrNull = (id: string) => {
   }
 };
 
-/** Итог боя с игроком: рейтинг, счёт побед и запись для сервера (разнести сопернику). */
+/** Итог боя с игроком — запись для сервера: он меняет рейтинг и счёт обоим (ArenaProfile) и пишет защитнику в журнал. */
 function settlePvp(s: PlayerState, run: ArenaRun, win: boolean, seed: number): PlayerState {
   const rival = run.opp?.player;
   if (!rival) return s;
   const d = ratingDeltas(rival.myRating, rival.rating);
   const delta = win ? d.win : d.lose;
-  const pvp = s.pvp ?? { wins: 0, losses: 0 };
   return {
     ...s,
-    rating: ratingAfter(s.rating ?? RATING_START, delta),
-    pvp: { wins: pvp.wins + (win ? 1 : 0), losses: pvp.losses + (win ? 0 : 1) },
     pvpPending: { id: `${run.opp!.seed}:${run.fight}:${seed >>> 0}`, opponentId: rival.userId, win, delta, seed: seed >>> 0 },
   };
 }

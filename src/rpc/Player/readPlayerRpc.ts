@@ -4,6 +4,7 @@ import { forfeitIfInBattle, lobbyRegen } from '@shared/core/arena'
 import { withClock } from '@shared/core/clock'
 import { readOrCreatePlayer, toPlayerView } from '../../entities/Player/storage'
 import { commitPlayer } from '../../entities/Player/commit'
+import { ensureProfile } from '../../entities/Arena/profile'
 
 export const readPlayerRpc = protectedRpc('player/read', (userId, _payload, ctx, logger, nk) => {
   const stored = readOrCreatePlayer(nk, userId)
@@ -14,7 +15,9 @@ export const readPlayerRpc = protectedRpc('player/read', (userId, _payload, ctx,
     record = { ...stored.record, state, rev: stored.record.rev + 1, updatedAt: now }
   }
   if (record !== stored.record || !stored.record.pub) {
-    record = commitPlayer(nk, logger, userId, ctx.username || '', record, stored.version)
+    record = commitPlayer(nk, logger, userId, ctx.username || '', record, stored.version).record
   }
-  return JSON.stringify(toPlayerView(record, isDebugMode(ctx)))
+  const legacy = record.state as unknown as { rating?: number; pvp?: { wins: number; losses: number } }
+  const arena = ensureProfile(nk, userId, ctx.username || '', legacy)
+  return JSON.stringify({ ...toPlayerView(record, isDebugMode(ctx)), arena })
 })

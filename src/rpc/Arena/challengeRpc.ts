@@ -1,7 +1,7 @@
 import { protectedRpc } from '@lib/protectedRpc'
 import { GRPCErrorCode, makeErrorResponse } from '@lib/response'
 import { startPvp } from '@shared/core/arena'
-import { ratingOf } from '../../entities/Arena/leaderboard'
+import { ensureProfile, readProfile } from '../../entities/Arena/profile'
 import { readSnapshots } from '../../entities/Arena/publish'
 import { readOrCreatePlayer, readPlayer } from '../../entities/Player/storage'
 import { commitPlayer } from '../../entities/Player/commit'
@@ -28,8 +28,8 @@ export const challengeRpc = protectedRpc('arena/challenge', (userId, payload, ct
   const rival = {
     userId: input.userId,
     name: users[0].username,
-    rating: ratingOf(rivalStored.record.state),
-    myRating: ratingOf(stored.record.state),
+    rating: readProfile(nk, input.userId).rating,
+    myRating: ensureProfile(nk, userId, ctx.username || '').rating,
     snapshot,
   }
   const state = startPvp(stored.record.state, input.charUid, rival, seed)
@@ -37,7 +37,7 @@ export const challengeRpc = protectedRpc('arena/challenge', (userId, payload, ct
     logger.info(`[arena/challenge] Rejected user=${userId} opponent=${input.userId}`)
     return makeErrorResponse('Cannot challenge now', GRPCErrorCode.FAILED_PRECONDITION)
   }
-  const record = commitPlayer(
+  const { record } = commitPlayer(
     nk,
     logger,
     userId,

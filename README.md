@@ -13,7 +13,7 @@
 ```bash
 npm install
 npm run up        # собрать и поднять Nakama + Postgres
-npm run logs      # в логе: «CTG-Proto-Backend 0.6.0 ready, core …, self-test: …»
+npm run logs      # в логе: «CTG-Proto-Backend 0.7.0 ready, core …, self-test: …»
 npm run down
 ```
 
@@ -61,11 +61,12 @@ npm run check-core   # проверить, что src/shared совпадает 
 | RPC | Вход | Выход |
 | --- | --- | --- |
 | `system/ping` | `{ selfTest?: boolean, seed?: number }` | `{ server, protocol, shared: { proto, digest }, time, selfTest? }` — `selfTest` считает бой двух ботов по seed |
-| `player/read` | `{}` | `{ state, rev, serverTime, server, protocol, shared, debug }` — состояние игрока; нет записи — создаётся стартовое. При чтении: бой, прерванный перезагрузкой, засчитывается поражением; кубы чинятся по часам сервера |
-| `player/act` | `{ rev, actions: [{ name, args, now, seed }] }` | `{ ok: true, rev, hash, state? }` — действия исполнены (`hash` — отпечаток состояния для сверки); `{ ok: false, reason: 'rejected' \| 'conflict', state, rev, action? }` — действие отклонено или ревизия устарела, клиент берёт состояние сервера. Пачка исполняется целиком или не исполняется вовсе |
+| `player/read` | `{}` | `{ state, rev, serverTime, server, protocol, shared, debug, arena }` — состояние игрока; нет записи — создаётся стартовое. При чтении: бой, прерванный перезагрузкой, засчитывается поражением; кубы чинятся по часам сервера |
+| `player/act` | `{ rev, actions: [{ name, args, now, seed }] }` | `{ ok: true, rev, hash, state?, arena? }` — действия исполнены (`hash` — отпечаток состояния для сверки); `{ ok: false, reason: 'rejected' \| 'conflict', state, rev, action? }` — действие отклонено или ревизия устарела, клиент берёт состояние сервера. Пачка исполняется целиком или не исполняется вовсе |
 | `player/reset` | `{}` | как `player/read` — сброс к стартовому состоянию; только в режиме отладки |
-| `arena/opponents` | `{}` | `{ me: { rating, wins, losses }, opponents: [{ userId, name, rating, wins, losses, winDelta, loseDelta, snapshot }] }` — до 30 игроков с бойцом, ближайшие по рейтингу; `winDelta` / `loseDelta` — изменение рейтинга вызывающего |
+| `arena/opponents` | `{}` | `{ me: { rating, wins, losses, inbox }, opponents: [{ userId, name, rating, wins, losses, winDelta, loseDelta, snapshot }] }` — до 30 игроков с бойцом, ближайшие по рейтингу; `winDelta` / `loseDelta` — изменение рейтинга вызывающего |
 | `arena/leaderboard` | `{}` | `{ total, me, top, around }` — первые 50 строк таблицы рейтинга (`rank, name, rating, wins, losses, me`); если игрок не в них — `around`: 7 строк вокруг его места |
+| `arena/claimInbox` | `{}` | `{ state, rev, arena }` — журнал нападений очищен, награды из него положены в инвентарь |
 | `arena/challenge` | `{ userId, charUid }` | `{ state, rev }` — начата серия с игроками или выбран соперник следующего её боя: в `arenaRun.opp.player` — снимок бойца соперника и рейтинги обоих |
 
 Хук `AfterAuthenticateDevice` (`src/hooks/initPlayer.ts`) создаёт игроку стартовое состояние при первом входе.
@@ -88,10 +89,12 @@ npm run check-core   # проверить, что src/shared совпадает 
 - Бой асинхронный: дерутся со **снимком** активного бойца соперника (`fighter/active`, кубы целые); лут победителю —
   копии, хозяин ничего не теряет. Снимок и запись в таблице рейтинга обновляются после любого изменения состояния
   (`entities/Arena/publish.ts`), только если изменились.
-- Бой считается как в серии с ботами (`startFight` → `finishFight` с вводом игрока). Итог пишет рейтинг и счёт
-  нападавшему и оставляет в состоянии `pvpPending`; сервер один раз (`record.pvpDone`) разносит его защитнику
-  (`entities/Arena/settlePvp.ts`): рейтинг с обратным знаком, счёт, запись в `inbox`, а если защитник отбился —
-  награда (`arena.json → defenseReward` кубов + один вариант из `reward.drops`).
+- Бой считается как в серии с ботами (`startFight` → `finishFight` с вводом игрока). Итог оставляет в состоянии
+  нападавшего `pvpPending`; сервер один раз (`record.pvpDone`) разносит его (`entities/Arena/settlePvp.ts`) по
+  **профилям арены** обоих: рейтинг (у защитника с обратным знаком), счёт, а защитнику — запись в журнал
+  (`inbox`) с наградой, если он отбился (`arena.json → defenseReward` кубов + один вариант из `reward.drops`).
+- Профиль арены (`arena/profile`: `{ rating, wins, losses, inbox }`) — отдельная запись игрока. Состояние
+  защитника чужой бой не меняет: награду он забирает сам (`arena/claimInbox`), когда читает журнал.
 - Рейтинг — Эло (`src/shared/core/rating.ts`): старт 1000, K = 32. Таблица — лидерборд Nakama `arena_rating`
   (score = рейтинг, metadata = победы / поражения).
 - Перезагрузка посреди боя с игроком — поражение со всеми последствиями (`player/read`).
@@ -101,4 +104,5 @@ npm run check-core   # проверить, что src/shared совпадает 
 | Коллекция | Ключ | Что |
 | --- | --- | --- |
 | `player` | `state` | `{ state: PlayerState, rev, createdAt, updatedAt }` — всё состояние игрока (тип из `src/shared/core/state.ts`); пишет только сервер, `rev` растёт с каждой записью |
+| `arena` | `profile` | `{ rating, wins, losses, inbox }` — рейтинг, счёт боёв с игроками и журнал нападений; меняют свои и чужие бои (запись с повтором при конфликте версии), вслед обновляется лидерборд |
 | `fighter` | `active` | `{ snapshot, updatedAt }` — снимок активного бойца игрока для боёв с игроками; читать могут все, пишет сервер |

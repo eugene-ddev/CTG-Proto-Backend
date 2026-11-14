@@ -126,8 +126,6 @@ export const ACTIONS = {
   // из начатого боя серию не закрыть — только итогом боя (finishFight), иначе от поражения можно было бы уйти
   surrenderRun: (s: S): R => (s.arenaRun?.inBattle ? null : surrenderRun(s)?.state ?? null),
   endRun: (s: S): R => (s.arenaRun?.inBattle ? null : endRun(s)),
-  /** Журнал нападений прочитан. */
-  inboxClear: (s: S): R => (s.inbox?.length ? { ...s, inbox: [] } : s),
   lootTake: (s: S, _c: ActionCtx, index: number, cell?: number | null): R => lootTake(s, index, cell ?? undefined)?.state ?? null,
   lootDrop: (s: S, _c: ActionCtx, cell: number): R => lootDrop(s, cell),
   lootClose: (s: S): R => lootClose(s),
@@ -182,7 +180,6 @@ export const ACTION_ARGS: Record<keyof typeof ACTIONS, string> = {
   finishFight: 'o',
   surrenderRun: '',
   endRun: '',
-  inboxClear: '',
   lootTake: 'i i?',
   lootDrop: 'i',
   lootClose: '',
