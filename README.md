@@ -13,7 +13,7 @@
 ```bash
 npm install
 npm run up        # собрать и поднять Nakama + Postgres
-npm run logs      # в логе: «CTG-Proto-Backend 0.2.0 ready, core …, self-test: …»
+npm run logs      # в логе: «CTG-Proto-Backend 0.3.0 ready, core …, self-test: …»
 npm run down
 ```
 
@@ -61,11 +61,21 @@ npm run check-core   # проверить, что src/shared совпадает 
 | RPC | Вход | Выход |
 | --- | --- | --- |
 | `system/ping` | `{ selfTest?: boolean, seed?: number }` | `{ server, protocol, shared: { proto, digest }, time, selfTest? }` — `selfTest` считает бой двух ботов по seed |
-| `player/read` | `{}` | `{ state, rev, serverTime, server, protocol, shared }` — состояние игрока; нет записи — создаётся стартовое |
-| `player/sync` | `{ state, rev }` | `{ conflict: false, rev, serverTime }` или `{ conflict: true, state, rev, … }`, если `rev` устарел. **Временный (этап 1):** клиент присылает состояние целиком; на этапе 2 заменяется действиями |
-| `player/reset` | `{}` | как `player/read` — сброс к стартовому состоянию (отладка) |
+| `player/read` | `{}` | `{ state, rev, serverTime, server, protocol, shared, debug }` — состояние игрока; нет записи — создаётся стартовое. При чтении: бой, прерванный перезагрузкой, засчитывается поражением; кубы чинятся по часам сервера |
+| `player/act` | `{ rev, actions: [{ name, args, now, seed }] }` | `{ ok: true, rev, hash }` — действия исполнены (`hash` — отпечаток состояния для сверки); `{ ok: false, reason: 'rejected' \| 'conflict', state, rev, action? }` — действие отклонено или ревизия устарела, клиент берёт состояние сервера. Пачка исполняется целиком или не исполняется вовсе |
+| `player/reset` | `{}` | как `player/read` — сброс к стартовому состоянию; только в режиме отладки |
 
 Хук `AfterAuthenticateDevice` (`src/hooks/initPlayer.ts`) создаёт игроку стартовое состояние при первом входе.
+
+## Действия
+
+Список действий и их исполнение — `src/shared/core/actions.ts` (из прототипа): `applyAction(state, name, args, { now, seed })`.
+Сервер не доверяет состоянию клиента — только названию действия и аргументам; условия проверяет сама логика.
+
+- `now` — время действия от клиента; принимается, если отличается от часов сервера не больше чем на 10 с, иначе
+  берётся время сервера. `seed` — случайное зерно действия.
+- Действия `debug*` и `player/reset` исполняются только в режиме отладки: `runtime.env: CTG_DEBUG=true` в `local.yml`.
+- Этап 2: итог боя серии (`finishFight`) присылает клиент; на этапе 3 бой считает сервер.
 
 ## Хранение
 

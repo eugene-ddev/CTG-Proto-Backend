@@ -14,6 +14,7 @@ import type { ArenaConfig, CharacterBlueprint, EquipmentItem, Item, Stat } from 
 import { bagSlots, characterStats, itemOf, lv, requirementGap } from './character';
 import { SHARD_ID, addCubes, addItem, itemCount, spendCubes, takeItems, uid, type CharacterState, type PlayerState } from './state';
 import { createRng, randomSeed } from './rng';
+import { clockNow } from './clock';
 import { playerWeaponLevel, recordOpponent } from './opponent';
 import { bagDraws, drawInt, replayDraws, rngDraws, type Bags, type DrawLog, type DrawSource } from './bag';
 
@@ -266,7 +267,7 @@ function applyLoss(s: PlayerState, charUid: string): FightOutcome {
   });
   if (c.rucksack) lost.push(c.rucksack.itemId);
   for (const e of c.bag ?? []) if (e) lost.push(e.itemId);
-  c = { ...c, equipment, rucksack: null, bag: [], lobbySince: c.brokenBlocks.length ? Date.now() : undefined };
+  c = { ...c, equipment, rucksack: null, bag: [], lobbySince: c.brokenBlocks.length ? clockNow() : undefined };
   return { state: { ...withChar(s, c), arenaRun: null }, lost };
 }
 
@@ -284,7 +285,7 @@ export function endRun(s: PlayerState): PlayerState {
   const c = charOf(s, run.charUid);
   const next: PlayerState = { ...s, arenaRun: null };
   // восстановление начинается с выхода с арены
-  return c ? withChar(next, { ...c, lobbySince: c.brokenBlocks.length ? Date.now() : undefined }) : next;
+  return c ? withChar(next, { ...c, lobbySince: c.brokenBlocks.length ? clockNow() : undefined }) : next;
 }
 
 /** Перезагрузка посреди боя — поражение. */

@@ -1,6 +1,6 @@
 import { pingRpc } from '@rpc/System/pingRpc'
 import { readPlayerRpc } from '@rpc/Player/readPlayerRpc'
-import { syncPlayerRpc } from '@rpc/Player/syncPlayerRpc'
+import { actRpc } from '@rpc/Player/actRpc'
 import { resetPlayerRpc } from '@rpc/Player/resetPlayerRpc'
 import { initPlayer } from './hooks/initPlayer'
 import { SERVER_VERSION, SHARED_VERSION } from '@lib/version'
@@ -11,7 +11,7 @@ const InitModule: nkruntime.InitModule = function (_ctx, logger, _nk, initialize
 
   initializer.registerRpc('system/ping', pingRpc)
   initializer.registerRpc('player/read', readPlayerRpc)
-  initializer.registerRpc('player/sync', syncPlayerRpc)
+  initializer.registerRpc('player/act', actRpc)
   initializer.registerRpc('player/reset', resetPlayerRpc)
 
   const check = runSelfTest(42)

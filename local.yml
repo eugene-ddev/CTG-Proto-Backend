@@ -5,6 +5,9 @@ logger:
   level: 'debug'
 runtime:
   js_entrypoint: 'main.js'
+  # режим отладки: сервер исполняет debug-действия (кубы, предметы, лечение) и player/reset. В проде — убрать.
+  env:
+    - 'CTG_DEBUG=true'
 session:
   token_expiry_sec: 7200
 socket:

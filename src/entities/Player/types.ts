@@ -17,4 +17,5 @@ export interface IPlayerView {
   server: string
   protocol: number
   shared: { proto: string; digest: string }
+  debug: boolean
 }

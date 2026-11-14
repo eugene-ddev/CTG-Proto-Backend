@@ -9,7 +9,9 @@ export interface IStoredPlayer {
 
 export function readPlayer(nk: nkruntime.Nakama, userId: string): IStoredPlayer | null {
   const [found] = nk.storageRead([{ collection: PLAYER_COLLECTION, key: PLAYER_STATE_KEY, userId }])
-  return found ? { record: found.value as IPlayerRecord, version: found.version } : null
+  if (!found) return null
+  const record = JSON.parse(JSON.stringify(found.value)) as IPlayerRecord
+  return { record, version: found.version }
 }
 
 export function writePlayer(nk: nkruntime.Nakama, userId: string, record: IPlayerRecord, version: string): void {
@@ -40,11 +42,12 @@ export function readOrCreatePlayer(nk: nkruntime.Nakama, userId: string): IStore
   return readPlayer(nk, userId) as IStoredPlayer
 }
 
-export const toPlayerView = (record: IPlayerRecord): IPlayerView => ({
+export const toPlayerView = (record: IPlayerRecord, debug: boolean): IPlayerView => ({
   state: record.state,
   rev: record.rev,
   serverTime: Date.now(),
   server: SERVER_VERSION,
   protocol: PROTOCOL_VERSION,
   shared: SHARED_VERSION,
+  debug,
 })
