@@ -13,7 +13,7 @@
 ```bash
 npm install
 npm run up        # собрать и поднять Nakama + Postgres
-npm run logs      # в логе: «CTG-Proto-Backend 0.8.0 ready, core …, self-test: …»
+npm run logs      # в логе: «CTG-Proto-Backend 0.8.1 ready, core …, self-test: …»
 npm run down
 ```
 
@@ -33,26 +33,33 @@ curl "http://127.0.0.1:7450/v2/rpc/system%2Fping?http_key=defaulthttpkey&unwrap"
 
 ## Выкладка на сервер
 
-Один Linux-сервер с Docker, один домен: Caddy получает сертификат, раздаёт клиент и проксирует API Nakama
-(`/v2`, `/ws`) — клиент ходит на тот же домен, адрес сервера в сборку не зашивается. GitHub не нужен, только SSH.
+Один Linux-сервер с Docker, один домен. Caddy получает сертификат и раздаёт:
+
+| Адрес | Что |
+| --- | --- |
+| `https://<домен>/ctg/` | игра (клиент) и её API: `/ctg/v2`, `/ctg/ws` проксируются в Nakama с отрезанным `/ctg` |
+| `https://<домен>/` | консоль Nakama — она работает только из корня (`/static`, `/v2/console`, свой роутер) |
+
+Клиент ходит на адрес своей страницы вместе с папкой — адрес сервера в сборку не зашивается.
+Папка игры — `GAME_PATH` в `.env` (по умолчанию `/ctg`). GitHub не нужен, только SSH.
 
 ```bash
 # 1. с рабочей машины (Git Bash): отправить закоммиченное состояние CTG-Proto и CTG-Proto-Backend
 bash deploy/push.sh root@<сервер>
 
 # 2. один раз, первая настройка: Docker, секреты, запуск, ежедневные дампы базы
-ssh root@<сервер> "bash /opt/ctg/CTG-Proto-Backend/deploy/setup.sh play.example.com"
+ssh root@<сервер> "bash /opt/ctg/CTG-Proto-Backend/deploy/setup.sh theruiners.tech"
 
 # дальше — только шаг 1: push.sh сам пересобирает и перезапускает
 ```
 
-До шага 2 — A-запись домена на IP сервера и открытые порты 80 и 443. За Cloudflare запись на время первого запуска
-держать «DNS only» (серое облако), иначе Caddy не получит сертификат.
+До шага 2 — A-запись домена на IP сервера, открытые порты 80 и 443, и они не заняты другим веб-сервером
+(`setup.sh` проверит контейнеры). За Cloudflare запись на время первого запуска держать «DNS only» (серое облако),
+иначе Caddy не получит сертификат.
 
 | Что | Где |
 | --- | --- |
-| Игра и API | `https://<домен>` |
-| Консоль Nakama | только с сервера: `ssh -L 7451:127.0.0.1:7451 root@<сервер>` → `http://127.0.0.1:7451`, пароль — в `.env` |
+| Консоль Nakama | `https://<домен>/`, логин `admin`, пароль — `CONSOLE_PASSWORD` в `.env` (случайный, 32 символа) |
 | Секреты и настройки | `/opt/ctg/.env` (создаёт `setup.sh`, выкладка не трогает) |
 | Дампы базы | `/opt/ctg/backups`, каждый день в 04:17, хранится 14; вручную — `bash deploy/backup.sh` |
 | Режим отладки | `bash deploy/setup.sh --debug` / `--no-debug` (по умолчанию выключен) |
@@ -61,6 +68,7 @@ ssh root@<сервер> "bash /opt/ctg/CTG-Proto-Backend/deploy/setup.sh play.ex
 Файлы: `docker-compose.prod.yml`, `prod.yml` (конфиг Nakama без секретов — они приходят флагами из `.env`),
 `deploy/` — `push.sh` (с рабочей машины), `setup.sh`, `update.sh`, `backup.sh` (на сервере), `Caddyfile`,
 `web.Dockerfile` (сборка клиента). `update.sh` перед сборкой проверяет, что `src/shared` совпадает с прототипом.
+Postgres наружу не публикуется.
 
 Клиент и сервер выкладываются только вместе: при расхождении версии логики вход блокируется.
 Клиент на другом хостинге (Cloudflare Pages) — сборка с `VITE_NAKAMA_HOST`, `VITE_NAKAMA_PORT=443`,

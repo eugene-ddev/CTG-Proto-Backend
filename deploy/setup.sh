@@ -72,14 +72,23 @@ else
   echo "== Нет /etc/cron.d — дампы базы по расписанию не включены (вручную: bash deploy/backup.sh)"
 fi
 
+# порты 80/443 должны быть свободны или заняты нашим же Caddy
+OURS=$(compose ps -q web 2>/dev/null || true)
+if [ -z "$OURS" ]; then
+  BUSY=$(docker ps --format '{{.Names}} {{.Ports}}' | grep -E '(0\.0\.0\.0|\[::\]):(80|443)->' | cut -d' ' -f1 | sort -u | tr '\n' ' ' || true)
+  [ -z "$BUSY" ] || die "порты 80/443 заняты контейнером: $BUSY— останови его (docker stop $BUSY) и запусти setup.sh снова"
+fi
+
 bash "$BACKEND_DIR/deploy/update.sh"
 
 HOST=$(env_value DOMAIN)
+GAME_PATH=$(env_value GAME_PATH)
+GAME_PATH=${GAME_PATH:-/ctg}
 cat <<INFO
 
 Готово.
-  Игра:     https://$HOST
-  Консоль:  ssh -L 7451:127.0.0.1:7451 <пользователь>@<сервер>, затем http://127.0.0.1:7451
+  Игра:     https://$HOST$GAME_PATH/
+  Консоль:  https://$HOST/
             логин $(env_value CONSOLE_USER), пароль $(env_value CONSOLE_PASSWORD)
   Отладка:  CTG_DEBUG=$(env_value CTG_DEBUG) (сменить: bash deploy/setup.sh --debug | --no-debug)
   Секреты:  $ENV_FILE

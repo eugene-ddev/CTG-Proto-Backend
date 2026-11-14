@@ -1,4 +1,4 @@
-# Боевой запуск: Postgres + Nakama + Caddy (HTTPS, клиент и API на одном домене).
+# Боевой запуск: Postgres + Nakama + Caddy (HTTPS; игра и её API — на <домен>/ctg/, консоль Nakama — в корне домена).
 # Запускается скриптами deploy/setup.sh и deploy/update.sh; секреты — в ../.env (вне репозитория).
 #   docker compose --env-file ../.env -f docker-compose.prod.yml up -d --build
 name: ctg-proto-prod
@@ -56,9 +56,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    # консоль — только с самого сервера (заходить через SSH-туннель); API наружу отдаёт Caddy
-    ports:
-      - "127.0.0.1:7451:7351"
+    # наружу не публикуется: API и консоль отдаёт Caddy
     restart: unless-stopped
 
   web:
@@ -73,6 +71,7 @@ services:
       - nakama
     environment:
       - DOMAIN=${DOMAIN:?нет DOMAIN в .env}
+      - GAME_PATH=${GAME_PATH:-/ctg}
     ports:
       - "80:80"
       - "443:443"

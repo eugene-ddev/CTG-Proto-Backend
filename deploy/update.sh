@@ -20,6 +20,8 @@ compose up -d --force-recreate --no-deps nakama web
 
 echo "== Жду сервер"
 DOMAIN=$(env_value DOMAIN)
+GAME_PATH=$(env_value GAME_PATH)
+GAME_PATH=${GAME_PATH:-/ctg}
 ok=""
 for _ in $(seq 1 30); do
   if [ "$(docker inspect -f '{{.State.Health.Status}}' "$(compose ps -q nakama)" 2>/dev/null)" = healthy ]; then
@@ -42,16 +44,17 @@ case "$DOMAIN" in
 esac
 ok=""
 for _ in $(seq 1 20); do
-  if curl -fsS -o /dev/null --max-time 5 "$URL/healthcheck" 2>/dev/null; then
+  if curl -fsS -o /dev/null --max-time 5 "$URL$GAME_PATH/healthcheck" 2>/dev/null; then
     ok=1
     break
   fi
   sleep 3
 done
 if [ -n "$ok" ]; then
-  echo "== $URL отвечает"
+  echo "== $URL$GAME_PATH/ отвечает"
 else
-  echo "!! $URL/healthcheck не отвечает. Проверь: A-запись домена указывает на этот сервер, порты 80 и 443 открыты."
+  echo "!! $URL$GAME_PATH/healthcheck не отвечает. Проверь: A-запись домена указывает на этот сервер, порты 80 и 443 открыты."
+  echo "   Порты заняты другим сервером (старый Caddy игры)? Останови его: docker ps, docker stop <имя>."
   echo "   Лог Caddy: docker compose --env-file $ENV_FILE -f $BACKEND_DIR/docker-compose.prod.yml logs web"
 fi
 
