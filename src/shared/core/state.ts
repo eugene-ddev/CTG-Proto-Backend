@@ -92,7 +92,7 @@ export interface PlayerState {
 
 /**
  * Состояние нового игрока. allItemIds — все предметы игры: с `start.allItems` каждый кладётся полной стопкой,
- * кроме перечисленных в `start.inventory` — их столько, сколько там указано (кубы — отдельно, `start.cubes`).
+ * кроме перечисленных в `start.allItemsCounts` — их столько, сколько там указано (кубы — отдельно, `start.cubes`).
  */
 export function createInitialState(start: StartConfig, allBlueprintIds: string[], maxStack: (itemId: string) => number, allItemIds: string[] = []): PlayerState {
   let s: PlayerState = {
@@ -108,9 +108,9 @@ export function createInitialState(start: StartConfig, allBlueprintIds: string[]
   };
   s = addCubes(s, start.cubes);
   if (start.allItems && allItemIds.length) {
-    // количество из start.inventory важнее полной стопки (точильные камни, пергамент, ювелирный набор — по 10)
-    const listed = new Map(start.inventory.map((e) => [e.itemId, e.count]));
-    for (const itemId of allItemIds) if (itemId !== CUBE_ID) s = addItem(s, itemId, listed.get(itemId) ?? maxStack(itemId), maxStack(itemId));
+    // количество из start.allItemsCounts важнее полной стопки (точильные камни, пергамент, ювелирный набор — по 10)
+    const counts = start.allItemsCounts ?? {};
+    for (const itemId of allItemIds) if (itemId !== CUBE_ID) s = addItem(s, itemId, counts[itemId] ?? maxStack(itemId), maxStack(itemId));
     return s;
   }
   for (const { itemId, count } of start.inventory) s = addItem(s, itemId, count, maxStack(itemId));

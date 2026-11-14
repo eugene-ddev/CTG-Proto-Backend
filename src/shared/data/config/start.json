@@ -9,17 +9,22 @@
  ],
  "inventory": [
   {
-   "itemId": "whetstone",
-   "count": 10
+   "itemId": "restoreStrengthVial",
+   "count": 5
   },
   {
-   "itemId": "parchment",
-   "count": 10
+   "itemId": "restoreArmorVial",
+   "count": 5
   },
   {
-   "itemId": "jewelerKit",
-   "count": 10
+   "itemId": "restoreDexterityVial",
+   "count": 5
   }
  ],
- "allItems": true
+ "allItems": true,
+ "allItemsCounts": {
+  "whetstone": 10,
+  "parchment": 10,
+  "jewelerKit": 10
+ }
 }

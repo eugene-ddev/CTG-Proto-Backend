@@ -236,9 +236,10 @@ export interface StartConfig {
   inventory: Array<{ itemId: string; count: number }>;
   /**
    * Новый игрок получает все предметы игры, каждого — полную стопку (пока идёт разработка); для предметов из
-   * `inventory` — указанное там количество. Кубы — отдельно, `cubes`.
+   * `allItemsCounts` — указанное там количество. Кубы — отдельно, `cubes`. Без allItems — набор из `inventory`.
    */
   allItems?: boolean;
+  allItemsCounts?: Record<string, number>;
 }
 
 /** Настройки боя (config/combat.json). */
