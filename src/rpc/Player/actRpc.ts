@@ -2,7 +2,8 @@ import { protectedRpc } from '@lib/protectedRpc'
 import { GRPCErrorCode, makeErrorResponse } from '@lib/response'
 import { isDebugMode } from '@lib/debug'
 import { applyAction, isAction, isDebugAction, isServerSeeded, stateHash, type ActionCall } from '@shared/core/actions'
-import { readOrCreatePlayer, writePlayer } from '../../entities/Player/storage'
+import { readOrCreatePlayer } from '../../entities/Player/storage'
+import { commitPlayer } from '../../entities/Player/commit'
 
 interface IActPayload {
   rev: number
@@ -49,7 +50,7 @@ export const actRpc = protectedRpc('player/act', (userId, payload, ctx, logger, 
   }
 
   const record = { ...stored.record, state, rev: stored.record.rev + 1, updatedAt: serverNow }
-  writePlayer(nk, userId, record, stored.version)
+  commitPlayer(nk, logger, userId, ctx.username || '', record, stored.version)
   logger.info(`[player/act] Applied user=${userId} actions=${input.actions.map((call) => call.name).join(',')} rev=${record.rev}`)
   return JSON.stringify({ ok: true, rev: record.rev, hash: stateHash(state), state: seededByServer ? state : undefined })
 })

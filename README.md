@@ -13,7 +13,7 @@
 ```bash
 npm install
 npm run up        # собрать и поднять Nakama + Postgres
-npm run logs      # в логе: «CTG-Proto-Backend 0.4.1 ready, core …, self-test: …»
+npm run logs      # в логе: «CTG-Proto-Backend 0.5.0 ready, core …, self-test: …»
 npm run down
 ```
 
@@ -64,6 +64,8 @@ npm run check-core   # проверить, что src/shared совпадает 
 | `player/read` | `{}` | `{ state, rev, serverTime, server, protocol, shared, debug }` — состояние игрока; нет записи — создаётся стартовое. При чтении: бой, прерванный перезагрузкой, засчитывается поражением; кубы чинятся по часам сервера |
 | `player/act` | `{ rev, actions: [{ name, args, now, seed }] }` | `{ ok: true, rev, hash, state? }` — действия исполнены (`hash` — отпечаток состояния для сверки); `{ ok: false, reason: 'rejected' \| 'conflict', state, rev, action? }` — действие отклонено или ревизия устарела, клиент берёт состояние сервера. Пачка исполняется целиком или не исполняется вовсе |
 | `player/reset` | `{}` | как `player/read` — сброс к стартовому состоянию; только в режиме отладки |
+| `arena/opponents` | `{}` | `{ me: { rating, wins, losses }, opponents: [{ userId, name, rating, wins, losses, winDelta, loseDelta, snapshot }] }` — до 30 игроков с бойцом, ближайшие по рейтингу; `winDelta` / `loseDelta` — изменение рейтинга вызывающего |
+| `arena/challenge` | `{ userId, charUid }` | `{ state, rev }` — начата серия с игроками или выбран соперник следующего её боя: в `arenaRun.opp.player` — снимок бойца соперника и рейтинги обоих |
 
 Хук `AfterAuthenticateDevice` (`src/hooks/initPlayer.ts`) создаёт игроку стартовое состояние при первом входе.
 
@@ -80,8 +82,22 @@ npm run check-core   # проверить, что src/shared совпадает 
 - Бой серии: `finishFight` принимает только ввод игрока (артефакты, ход сдачи); бой пересчитывается на сервере
   (`src/shared/core/fight.ts`) по бойцу, противнику и зерну из состояния. Лут — из `state.loot` (`lootTake`).
 
+## Бои с игроками
+
+- Бой асинхронный: дерутся со **снимком** активного бойца соперника (`fighter/active`, кубы целые); лут победителю —
+  копии, хозяин ничего не теряет. Снимок и запись в таблице рейтинга обновляются после любого изменения состояния
+  (`entities/Arena/publish.ts`), только если изменились.
+- Бой считается как в серии с ботами (`startFight` → `finishFight` с вводом игрока). Итог пишет рейтинг и счёт
+  нападавшему и оставляет в состоянии `pvpPending`; сервер один раз (`record.pvpDone`) разносит его защитнику
+  (`entities/Arena/settlePvp.ts`): рейтинг с обратным знаком, счёт, запись в `inbox`, а если защитник отбился —
+  награда (`arena.json → defenseReward` кубов + один вариант из `reward.drops`).
+- Рейтинг — Эло (`src/shared/core/rating.ts`): старт 1000, K = 32. Таблица — лидерборд Nakama `arena_rating`
+  (score = рейтинг, metadata = победы / поражения).
+- Перезагрузка посреди боя с игроком — поражение со всеми последствиями (`player/read`).
+
 ## Хранение
 
 | Коллекция | Ключ | Что |
 | --- | --- | --- |
 | `player` | `state` | `{ state: PlayerState, rev, createdAt, updatedAt }` — всё состояние игрока (тип из `src/shared/core/state.ts`); пишет только сервер, `rev` растёт с каждой записью |
+| `fighter` | `active` | `{ snapshot, updatedAt }` — снимок активного бойца игрока для боёв с игроками; читать могут все, пишет сервер |

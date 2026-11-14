@@ -1,7 +1,7 @@
 // Состояние игрока и операции над ним. Чистые функции без Phaser: на вход
 // состояние, на выход новое состояние. Удобно тестировать и потом перенести на сервер.
 import type { StartConfig, Stat } from '../data/types';
-import type { ArenaRun, LootEntry } from './arena';
+import type { ArenaRun, InboxEntry, LootEntry, PvpPending } from './arena';
 import type { EquipmentPreset } from './preset';
 import type { Bags } from './bag';
 
@@ -77,6 +77,14 @@ export interface PlayerState {
   lastArenaCharacterId: string | null;
   /** Идущая серия боёв арены (null — нет). */
   arenaRun: ArenaRun | null;
+  /** Рейтинг в боях с игроками (Эло); нет — стартовый. Меняют свои бои (finishFight) и чужие нападения (сервер). */
+  rating?: number;
+  /** Победы и поражения в боях с игроками: свои нападения и отбитые / пропущенные чужие. */
+  pvp?: { wins: number; losses: number };
+  /** Итог последнего боя с игроком, который сервер должен разнести сопернику (рейтинг, награда, журнал). */
+  pvpPending?: PvpPending | null;
+  /** Журнал: кто нападал, пока игрока не было. Читается и очищается на главной. */
+  inbox?: InboxEntry[];
   /** Лут побеждённого противника, который можно забрать в рюкзак бойца (окно победы); null — нет. */
   loot?: { charUid: string; entries: LootEntry[] } | null;
   /** Счётчик для uid — детерминированно и без коллизий после загрузки. */

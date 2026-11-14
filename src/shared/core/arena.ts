@@ -15,6 +15,7 @@ import { bagSlots, characterStats, discardFromBag, itemOf, lv, requirementGap } 
 import { SHARD_ID, addCubes, addItem, itemCount, spendCubes, takeItems, uid, type CharacterState, type PlayerState } from './state';
 import { createRng, randomSeed } from './rng';
 import { clockNow } from './clock';
+import { RATING_START, ratingAfter, ratingDeltas } from './rating';
 import { playerWeaponLevel, recordOpponent } from './opponent';
 import { bagDraws, drawInt, replayDraws, rngDraws, type Bags, type DrawLog, type DrawSource } from './bag';
 
@@ -32,6 +33,66 @@ export interface ArenaOpponent {
   exact?: boolean;
   /** Броски из мешков игрока, которыми выбран бот (этап 6); нет — старый сейв, бот из seed. */
   draws?: DrawLog;
+  /** Противник — игрок: снимок его активного бойца на момент вызова и рейтинги обоих. Нет — бот. */
+  player?: RivalInfo;
+}
+
+/** Снимок бойца для боя с игроками: с ним дерутся, пока хозяина нет в игре. Кубы целые. */
+export interface FighterSnapshot {
+  charName: string;
+  blueprintId: string;
+  blockStats: Stat[];
+  equipment: Array<{ itemId: string; level?: number; cells?: number; gems?: string[] } | null>;
+  target?: Stat[];
+  /** Надетая сумка и её содержимое — лут победителю (копии: хозяин ничего не теряет). */
+  rucksack: string | null;
+  bag: Array<{ itemId: string; count: number }>;
+}
+
+export interface RivalInfo {
+  userId: string;
+  name: string;
+  /** Рейтинг соперника и свой на момент вызова — по ним считается изменение рейтинга за бой. */
+  rating: number;
+  myRating: number;
+  snapshot: FighterSnapshot;
+}
+
+/** Итог боя с игроком для сервера: разнести сопернику рейтинг, награду и запись в журнал. */
+export interface PvpPending {
+  id: string;
+  opponentId: string;
+  /** Победил нападавший. */
+  win: boolean;
+  /** Изменение рейтинга нападавшего (со знаком); у защитника — обратное. */
+  delta: number;
+  seed: number;
+}
+
+/** Запись журнала защитника. */
+export interface InboxEntry {
+  at: number;
+  attacker: string;
+  /** Защитник отбился. */
+  won: boolean;
+  ratingDelta: number;
+  reward?: SeriesReward;
+}
+
+/** Снимок бойца. */
+export function snapshotOf(c: CharacterState): FighterSnapshot {
+  const pick = (e: { itemId: string; level?: number; cells?: number; gems?: string[] }) => ({
+    itemId: e.itemId, ...(e.level !== undefined ? { level: e.level } : {}), ...(e.cells !== undefined ? { cells: e.cells } : {}), ...(e.gems?.length ? { gems: [...e.gems] } : {}),
+  });
+  return {
+    charName: c.name,
+    blueprintId: c.blueprintId,
+    blockStats: [...c.blockStats],
+    equipment: c.equipment.map((e) => (e && hasItem(e.itemId) ? pick(e) : null)),
+    ...(c.target ? { target: [...c.target] } : {}),
+    rucksack: c.rucksack?.itemId ?? null,
+    bag: (c.bag ?? []).filter((e): e is NonNullable<typeof e> => !!e && hasItem(e.itemId)).map((e) => ({ itemId: e.itemId, count: e.count })),
+  };
 }
 
 export interface ArenaRun {
@@ -47,6 +108,8 @@ export interface ArenaRun {
   retriesUsed?: number;
   /** Зерно начатого боя (выдаёт сервер в startFight): по нему бой считают и клиент, и сервер. */
   battleSeed?: number;
+  /** Вид серии: с ботами (по умолчанию) или с игроками (соперник выбирается перед каждым боем, повторов нет). */
+  mode?: 'bots' | 'players';
 }
 
 export interface FightResult {
@@ -206,7 +269,7 @@ export function startRun(s: PlayerState, charUid: string, oppSeed: number = rand
   const c = charOf(s, charUid);
   if (!c) return null;
   const run = runOf(s);
-  if (run && run.charUid !== charUid) return null;
+  if (run && (run.charUid !== charUid || run.mode === 'players')) return null;
   if (run?.opp) return s;
   const { opp, bags } = chooseOpponent(s, c, oppSeed, run?.fight ?? 1);
   if (run) return { ...s, bags, arenaRun: { ...run, opp } };
@@ -215,7 +278,44 @@ export function startRun(s: PlayerState, charUid: string, oppSeed: number = rand
     bags,
     loot: null,
     lastArenaCharacterId: charUid,
-    arenaRun: { charUid, fight: 1, wins: 0, inBattle: false, opp },
+    arenaRun: { charUid, fight: 1, wins: 0, inBattle: false, opp, mode: 'bots' },
+  };
+}
+
+/**
+ * Вызвать игрока: начать серию с игроками или выбрать соперника на следующий её бой.
+ * Соперника (снимок бойца, рейтинги) и зерно даёт сервер. null — идёт другая серия или бой.
+ */
+export function startPvp(s: PlayerState, charUid: string, rival: RivalInfo, seed: number): PlayerState | null {
+  const c = charOf(s, charUid);
+  if (!c || !getBlueprintOrNull(rival.snapshot.blueprintId)) return null;
+  const run = runOf(s);
+  const opp: ArenaOpponent = { seed: seed >>> 0, level: 0, exact: true, player: rival };
+  if (!run) return { ...s, loot: null, pvpPending: null, lastArenaCharacterId: charUid, arenaRun: { charUid, fight: 1, wins: 0, inBattle: false, opp, mode: 'players' } };
+  if (run.mode !== 'players' || run.charUid !== charUid || run.opp || run.inBattle) return null;
+  return { ...s, loot: null, pvpPending: null, arenaRun: { ...run, opp } };
+}
+
+const getBlueprintOrNull = (id: string) => {
+  try {
+    return getBlueprint(id);
+  } catch {
+    return null;
+  }
+};
+
+/** Итог боя с игроком: рейтинг, счёт побед и запись для сервера (разнести сопернику). */
+function settlePvp(s: PlayerState, run: ArenaRun, win: boolean, seed: number): PlayerState {
+  const rival = run.opp?.player;
+  if (!rival) return s;
+  const d = ratingDeltas(rival.myRating, rival.rating);
+  const delta = win ? d.win : d.lose;
+  const pvp = s.pvp ?? { wins: 0, losses: 0 };
+  return {
+    ...s,
+    rating: ratingAfter(s.rating ?? RATING_START, delta),
+    pvp: { wins: pvp.wins + (win ? 1 : 0), losses: pvp.losses + (win ? 0 : 1) },
+    pvpPending: { id: `${run.opp!.seed}:${run.fight}:${seed >>> 0}`, opponentId: rival.userId, win, delta, seed: seed >>> 0 },
   };
 }
 
@@ -266,6 +366,7 @@ export function finishFight(s: PlayerState, r: FightResult): FightOutcome | null
   const run = runOf(s);
   const c0 = run && charOf(s, run.charUid);
   if (!run || !c0) return null;
+  if (run.mode === 'players') return finishPvpFight(s, run, c0, r);
   if (!r.win) {
     // есть повтор — бой переигрывается: боец как до боя, ничего не пропадает
     if (retriesLeft(run) > 0) {
@@ -292,9 +393,36 @@ export function finishFight(s: PlayerState, r: FightResult): FightOutcome | null
   };
 }
 
-/** Поражение в серии: пропадают надетое оружие и рюкзак (с содержимым), артефакты остаются; серия закрыта. */
+/** Бой серии с игроками: повторов нет; после победы соперник следующего боя выбирается заново (startPvp). */
+function finishPvpFight(s0: PlayerState, run: ArenaRun, c0: CharacterState, r: FightResult): FightOutcome {
+  const s = settlePvp(s0, run, r.win, r.seed);
+  const c: CharacterState = { ...c0, brokenBlocks: [...r.brokenBlocks].sort((a, b) => a - b) };
+  if (!r.win) return applyLoss(withChar(s, c), run.charUid);
+  if (run.fight >= SERIES_LENGTH) {
+    const bags = cloneBags(s);
+    const reward = rollSeriesReward(r.seed ^ 0x5e71e5, ARENA, bagDraws(bags, createRng(r.seed ^ 0x5e71e5), COMBAT.bagSize));
+    return { state: grantReward(endRun({ ...withChar(s, c), bags }), reward), lost: [], reward };
+  }
+  const { opp: _opp, ...rest } = run;
+  return { state: { ...withChar(s, c), arenaRun: { ...rest, fight: run.fight + 1, wins: run.wins + 1, inBattle: false } }, lost: [] };
+}
+
+/** Что теряется при поражении в серии этого вида (arena.json → loss). */
+let lossOverride: { bots: 'keep' | 'drop'; players: 'keep' | 'drop' } | null = null;
+/** Переопределить правило поражения (тесты); null — из конфига. */
+export const setLossRule = (rule: typeof lossOverride) => (lossOverride = rule);
+export const lossRule = (mode: ArenaRun['mode']): 'keep' | 'drop' => (lossOverride ?? ARENA.loss ?? { bots: 'drop', players: 'drop' })[mode === 'players' ? 'players' : 'bots'];
+
+/**
+ * Поражение в серии — серия закрыта. По правилу вида серии (lossRule): drop — пропадают надетое оружие и рюкзак
+ * (с содержимым), артефакты остаются; keep — всё остаётся у бойца.
+ */
 function applyLoss(s: PlayerState, charUid: string): FightOutcome {
   let c = charOf(s, charUid)!;
+  if (lossRule(s.arenaRun?.mode) === 'keep') {
+    c = { ...c, lobbySince: c.brokenBlocks.length ? clockNow() : undefined };
+    return { state: { ...withChar(s, c), arenaRun: null }, lost: [] };
+  }
   const bp = getBlueprint(c.blueprintId) as CharacterBlueprint;
   const lost: string[] = [];
   const equipment = c.equipment.map((e, i) => {

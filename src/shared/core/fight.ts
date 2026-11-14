@@ -3,7 +3,7 @@
 // только ввод: когда он нажал артефакт и на каком ходу сдался. Итог боя клиент не присылает — его даёт пересчёт.
 import { getBlueprint, hasItem } from '../data/catalog';
 import type { CharacterBlueprint, EquipmentItem } from '../data/types';
-import { enemyLoot, finishFight, opponentDraws, type FightOutcome, type FightResult, type LootEntry } from './arena';
+import { enemyLoot, finishFight, opponentDraws, type FightOutcome, type FightResult, type LootEntry, type RivalInfo } from './arena';
 import { createBattle, step, useArtifact, MAX_TURNS, type BattleState, type FighterInput } from './battle';
 import { itemOf } from './character';
 import { generateOpponent, playerWeaponLevel, type Opponent } from './opponent';
@@ -29,6 +29,26 @@ export function fighterInputOf(c: CharacterState): FighterInput {
   };
 }
 
+/** Противник-игрок из снимка его бойца: кубы целые, оружие и приоритет атаки — как у хозяина. */
+export function rivalOpponent(rival: RivalInfo, seed: number): Opponent {
+  const snap = rival.snapshot;
+  const equipment = snap.equipment.map((e) => (e && hasItem(e.itemId) ? (itemOf(e) as EquipmentItem) : null));
+  return {
+    name: rival.name,
+    blueprintId: snap.blueprintId,
+    blockStats: snap.blockStats,
+    brokenBlocks: [],
+    equipment,
+    target: snap.target,
+    seed,
+    presetId: `player:${rival.userId}`,
+    pattern: `${snap.charName} · рейтинг ${rival.rating}`,
+    weaponLevels: equipment.map((e) => (e && 'itemLevel' in e ? e.itemLevel : null)),
+    rucksack: snap.rucksack,
+    bag: snap.bag.filter((e) => hasItem(e.itemId) && e.count > 0),
+  };
+}
+
 export interface FightSetup {
   char: CharacterState;
   me: FighterInput;
@@ -41,6 +61,7 @@ export function fightSetup(s: PlayerState): FightSetup | null {
   const char = run && s.characters.find((c) => c.uid === run.charUid);
   if (!run || !char || !run.opp) return null;
   const me = fighterInputOf(char);
+  if (run.opp.player) return { char, me, opp: rivalOpponent(run.opp.player, run.opp.seed) };
   const category = (getBlueprint(char.blueprintId) as CharacterBlueprint).category;
   const opp = generateOpponent(run.opp.seed, {
     level: run.opp.level ?? playerWeaponLevel(me.equipment),

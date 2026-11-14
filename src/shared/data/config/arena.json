@@ -1,6 +1,13 @@
 {
  "seriesLength": 3,
  "retries": 3,
+ "loss": {
+  "bots": "keep",
+  "players": "drop"
+ },
+ "defenseReward": {
+  "cubes": 30
+ },
  "reward": {
   "cubes": 100,
   "drops": [

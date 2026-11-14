@@ -8,6 +8,8 @@ export interface IPlayerRecord {
   rev: number
   createdAt: number
   updatedAt: number
+  pub?: string
+  pvpDone?: string
 }
 
 export interface IPlayerView {
