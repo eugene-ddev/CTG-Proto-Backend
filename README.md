@@ -13,7 +13,7 @@
 ```bash
 npm install
 npm run up        # собрать и поднять Nakama + Postgres
-npm run logs      # в логе: «CTG-Proto-Backend 0.3.0 ready, core …, self-test: …»
+npm run logs      # в логе: «CTG-Proto-Backend 0.4.0 ready, core …, self-test: …»
 npm run down
 ```
 
@@ -62,7 +62,7 @@ npm run check-core   # проверить, что src/shared совпадает 
 | --- | --- | --- |
 | `system/ping` | `{ selfTest?: boolean, seed?: number }` | `{ server, protocol, shared: { proto, digest }, time, selfTest? }` — `selfTest` считает бой двух ботов по seed |
 | `player/read` | `{}` | `{ state, rev, serverTime, server, protocol, shared, debug }` — состояние игрока; нет записи — создаётся стартовое. При чтении: бой, прерванный перезагрузкой, засчитывается поражением; кубы чинятся по часам сервера |
-| `player/act` | `{ rev, actions: [{ name, args, now, seed }] }` | `{ ok: true, rev, hash }` — действия исполнены (`hash` — отпечаток состояния для сверки); `{ ok: false, reason: 'rejected' \| 'conflict', state, rev, action? }` — действие отклонено или ревизия устарела, клиент берёт состояние сервера. Пачка исполняется целиком или не исполняется вовсе |
+| `player/act` | `{ rev, actions: [{ name, args, now, seed }] }` | `{ ok: true, rev, hash, state? }` — действия исполнены (`hash` — отпечаток состояния для сверки); `{ ok: false, reason: 'rejected' \| 'conflict', state, rev, action? }` — действие отклонено или ревизия устарела, клиент берёт состояние сервера. Пачка исполняется целиком или не исполняется вовсе |
 | `player/reset` | `{}` | как `player/read` — сброс к стартовому состоянию; только в режиме отладки |
 
 Хук `AfterAuthenticateDevice` (`src/hooks/initPlayer.ts`) создаёт игроку стартовое состояние при первом входе.
@@ -75,7 +75,10 @@ npm run check-core   # проверить, что src/shared совпадает 
 - `now` — время действия от клиента; принимается, если отличается от часов сервера не больше чем на 10 с, иначе
   берётся время сервера. `seed` — случайное зерно действия.
 - Действия `debug*` и `player/reset` исполняются только в режиме отладки: `runtime.env: CTG_DEBUG=true` в `local.yml`.
-- Этап 2: итог боя серии (`finishFight`) присылает клиент; на этапе 3 бой считает сервер.
+- Действия `startRun` и `startFight` (`isServerSeeded`) получают зерно от сервера, а не от клиента; в ответе на
+  такую пачку есть `state` — клиент берёт его целиком. Так нельзя перебирать противника или зерно боя.
+- Бой серии: `finishFight` принимает только ввод игрока (артефакты, ход сдачи); бой пересчитывается на сервере
+  (`src/shared/core/fight.ts`) по бойцу, противнику и зерну из состояния. Лут — из `state.loot` (`lootTake`).
 
 ## Хранение
 

@@ -5,8 +5,8 @@
 import { getBlueprint, getItem, hasBlueprint, ITEMS, maxStackOf } from '../data/catalog';
 import type { ItemKind, Stat } from '../data/types';
 import {
-  convertShards, drinkPotion, endRun, equipFromBag, finishFight, healFull, lobbyRegen, markInBattle, repairAll, startRun, stowToBag, stowToBagCell,
-  surrenderRun, takeLoot, type FightResult, type LootEntry, type PotionSource,
+  convertShards, drinkPotion, endRun, equipFromBag, healFull, lobbyRegen, lootClose, lootDrop, lootTake, repairAll, startFight, startRun, stowToBag,
+  stowToBagCell, surrenderRun, type PotionSource,
 } from './arena';
 import {
   discardFromBag, disassembleCharacter, equip, moveEquipped, moveInBag, putInBag, renameCharacter, setCharacterTarget, takeFromBag, unequip,
@@ -16,6 +16,7 @@ import { withClock } from './clock';
 import { completeCraft, disassembleItem, disassembleMany, unlockBlueprint } from './craft';
 import { applyTarget, type CraftTarget } from './craftTarget';
 import { applyCharacterEdit } from './edit';
+import { resolveFight, type FightInputs } from './fight';
 import { applyPreset, clearPreset, savePreset } from './preset';
 import { addCubes, addItem, moveInventory, sortInventory, type InventoryEntry, type PlayerState } from './state';
 import { addGemCell, insertGem, removeGem, upgradeWeapon, type UpgradeTarget } from './upgrade';
@@ -116,13 +117,17 @@ export const ACTIONS = {
     return cleared && gemId ? insertGem(cleared, target, gemId) : cleared;
   },
 
-  // ── серия арены (этап 2: итог боя присылает клиент; этап 3 — бой считает сервер) ──
+  // ── серия арены ──
+  // Противника (startRun) и зерно боя (startFight) выбирает сервер — см. SERVER_SEEDED. Итог боя не присылается:
+  // finishFight получает только ввод игрока и пересчитывает бой (core/fight.ts).
   startRun: (s: S, ctx: ActionCtx, charUid: string): R => startRun(s, charUid, ctx.seed),
-  markInBattle: (s: S): R => markInBattle(s),
-  finishFight: (s: S, _c: ActionCtx, result: FightResult): R => finishFight(s, result)?.state ?? null,
+  startFight: (s: S, ctx: ActionCtx): R => startFight(s, ctx.seed),
+  finishFight: (s: S, _c: ActionCtx, inputs: FightInputs): R => resolveFight(s, inputs ?? {})?.state ?? null,
   surrenderRun: (s: S): R => surrenderRun(s)?.state ?? null,
   endRun: (s: S): R => endRun(s),
-  takeLoot: (s: S, _c: ActionCtx, charUid: string, entry: LootEntry, cell?: number): R => takeLoot(s, charUid, entry, cell)?.state ?? null,
+  lootTake: (s: S, _c: ActionCtx, index: number, cell?: number): R => lootTake(s, index, cell)?.state ?? null,
+  lootDrop: (s: S, _c: ActionCtx, cell: number): R => lootDrop(s, cell),
+  lootClose: (s: S): R => lootClose(s),
 
   // ── отладка (сервер исполняет только в режиме отладки) ──
   debugAddCubes: (s: S, _c: ActionCtx, amount: number): R => addCubes(s, Math.max(0, Math.min(10000, Math.floor(amount)))),
@@ -135,6 +140,11 @@ export type ActionArgs<K extends ActionName> = (typeof ACTIONS)[K] extends (s: P
 
 export const isAction = (name: string): name is ActionName => Object.prototype.hasOwnProperty.call(ACTIONS, name);
 export const isDebugAction = (name: string) => name.indexOf('debug') === 0;
+/**
+ * Действия, зерно которых выбирает сервер (противник, бой): клиент их не предсказывает — ждёт ответ и берёт
+ * состояние сервера (store.request). Иначе зерно можно было бы перебирать.
+ */
+export const isServerSeeded = (name: string) => name === 'startRun' || name === 'startFight';
 
 /** Действие в очереди на сервер. */
 export interface ActionCall {

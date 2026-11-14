@@ -1,13 +1,15 @@
 import { protectedRpc } from '@lib/protectedRpc'
 import { GRPCErrorCode, makeErrorResponse } from '@lib/response'
 import { isDebugMode } from '@lib/debug'
-import { applyAction, isAction, isDebugAction, stateHash, type ActionCall } from '@shared/core/actions'
+import { applyAction, isAction, isDebugAction, isServerSeeded, stateHash, type ActionCall } from '@shared/core/actions'
 import { readOrCreatePlayer, writePlayer } from '../../entities/Player/storage'
 
 interface IActPayload {
   rev: number
   actions: ActionCall[]
 }
+
+const makeSeed = (nk: nkruntime.Nakama): number => parseInt(nk.uuidv4().replace(/-/g, '').slice(0, 8), 16) >>> 0
 
 const MAX_ACTIONS = 200
 const CLOCK_TOLERANCE_MS = 10000
@@ -30,11 +32,14 @@ export const actRpc = protectedRpc('player/act', (userId, payload, ctx, logger, 
   const debug = isDebugMode(ctx)
   const serverNow = Date.now()
   let state = stored.record.state
+  let seededByServer = false
   for (const call of input.actions) {
     const name = String(call && call.name)
     const allowed = isAction(name) && (debug || !isDebugAction(name)) && Array.isArray(call.args)
     const now = typeof call.now === 'number' && Math.abs(call.now - serverNow) <= CLOCK_TOLERANCE_MS ? call.now : serverNow
-    const seed = typeof call.seed === 'number' ? call.seed >>> 0 : 0
+    const serverSeeded = isServerSeeded(name)
+    seededByServer = seededByServer || serverSeeded
+    const seed = serverSeeded ? makeSeed(nk) : typeof call.seed === 'number' ? call.seed >>> 0 : 0
     const next = allowed ? applyAction(state, name, call.args, { now, seed }) : null
     if (!next) {
       logger.info(`[player/act] Rejected user=${userId} action=${name}`)
@@ -46,5 +51,5 @@ export const actRpc = protectedRpc('player/act', (userId, payload, ctx, logger, 
   const record = { ...stored.record, state, rev: stored.record.rev + 1, updatedAt: serverNow }
   writePlayer(nk, userId, record, stored.version)
   logger.info(`[player/act] Applied user=${userId} actions=${input.actions.map((call) => call.name).join(',')} rev=${record.rev}`)
-  return JSON.stringify({ ok: true, rev: record.rev, hash: stateHash(state) })
+  return JSON.stringify({ ok: true, rev: record.rev, hash: stateHash(state), state: seededByServer ? state : undefined })
 })

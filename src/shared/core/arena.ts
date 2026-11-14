@@ -11,7 +11,7 @@
 // Чистые функции над PlayerState, как и остальное ядро.
 import { ARENA, COMBAT, ITEMS, OPPONENTS, getBlueprint, getItem, hasItem, maxStackOf } from '../data/catalog';
 import type { ArenaConfig, CharacterBlueprint, EquipmentItem, Item, Stat } from '../data/types';
-import { bagSlots, characterStats, itemOf, lv, requirementGap } from './character';
+import { bagSlots, characterStats, discardFromBag, itemOf, lv, requirementGap } from './character';
 import { SHARD_ID, addCubes, addItem, itemCount, spendCubes, takeItems, uid, type CharacterState, type PlayerState } from './state';
 import { createRng, randomSeed } from './rng';
 import { clockNow } from './clock';
@@ -45,6 +45,8 @@ export interface ArenaRun {
   inBattle: boolean;
   /** Сколько повторов проигранного боя потрачено за серию (старые сейвы: нет — 0). */
   retriesUsed?: number;
+  /** Зерно начатого боя (выдаёт сервер в startFight): по нему бой считают и клиент, и сервер. */
+  battleSeed?: number;
 }
 
 export interface FightResult {
@@ -211,9 +213,46 @@ export function startRun(s: PlayerState, charUid: string, oppSeed: number = rand
   return {
     ...s,
     bags,
+    loot: null,
     lastArenaCharacterId: charUid,
     arenaRun: { charUid, fight: 1, wins: 0, inBattle: false, opp },
   };
+}
+
+/** Начать бой с выбранным противником: зерно боя фиксируется; дальше выход или перезагрузка — поражение. */
+export function startFight(s: PlayerState, seed: number): PlayerState | null {
+  const run = runOf(s);
+  if (!run || !run.opp || run.inBattle || !charOf(s, run.charUid)) return null;
+  return { ...s, loot: null, arenaRun: { ...run, inBattle: true, battleSeed: seed >>> 0 } };
+}
+
+/** Забрать лут побеждённого (s.loot) в рюкзак бойца: запись index, в ячейку cell или куда влезет. */
+export function lootTake(s: PlayerState, index: number, cell?: number): { state: PlayerState; left: number } | null {
+  const loot = s.loot;
+  const e = loot?.entries[index];
+  if (!loot || !e) return null;
+  const res = takeLoot(s, loot.charUid, e, cell);
+  if (!res) return null;
+  const entries = loot.entries.slice();
+  if (res.left > 0) entries[index] = { ...e, count: res.left };
+  else entries.splice(index, 1);
+  return { state: { ...res.state, loot: { ...loot, entries } }, left: res.left };
+}
+
+/** Выложить вещь из рюкзака к луту врага (окно победы): пока окно открыто, её можно забрать обратно. */
+export function lootDrop(s: PlayerState, cell: number): PlayerState | null {
+  const loot = s.loot;
+  if (!loot) return null;
+  const res = discardFromBag(s, loot.charUid, cell);
+  if (!res) return null;
+  const e = res.entry;
+  const entry: LootEntry = { itemId: e.itemId, count: e.count, ...(e.level !== undefined ? { level: e.level } : {}), ...(e.cells !== undefined ? { cells: e.cells } : {}), ...(e.gems?.length ? { gems: e.gems } : {}) };
+  return { ...res.state, loot: { ...loot, entries: [...loot.entries, entry] } };
+}
+
+/** Закрыть окно лута: незабранное пропадает. */
+export function lootClose(s: PlayerState): PlayerState {
+  return s.loot ? { ...s, loot: null } : s;
 }
 
 /** Бой начат: дальше выход или перезагрузка — поражение. */
@@ -283,7 +322,7 @@ export function endRun(s: PlayerState): PlayerState {
   const run = runOf(s);
   if (!run) return s;
   const c = charOf(s, run.charUid);
-  const next: PlayerState = { ...s, arenaRun: null };
+  const next: PlayerState = { ...s, arenaRun: null, loot: null };
   // восстановление начинается с выхода с арены
   return c ? withChar(next, { ...c, lobbySince: c.brokenBlocks.length ? clockNow() : undefined }) : next;
 }
