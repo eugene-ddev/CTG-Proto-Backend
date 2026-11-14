@@ -91,7 +91,7 @@ export const ACTIONS = {
   disassembleCharacter: (s: S, _c: ActionCtx, charUid: string): R => disassembleCharacter(s, charUid),
   setTarget: (s: S, _c: ActionCtx, charUid: string, order: Stat[]): R => setCharacterTarget(s, charUid, order),
   repairAll: (s: S, _c: ActionCtx, charUid: string): R => repairAll(s, charUid),
-  drinkPotion: (s: S, _c: ActionCtx, charUid: string, src: PotionSource, prefer?: number): R => drinkPotion(s, charUid, src, prefer),
+  drinkPotion: (s: S, _c: ActionCtx, charUid: string, src: PotionSource, prefer?: number | null): R => drinkPotion(s, charUid, src, prefer ?? undefined),
 
   // ── снаряжение и рюкзак ──
   equip: (s: S, _c: ActionCtx, charUid: string, slot: SlotRef, invUid: string): R => equip(s, charUid, slot, invUid),
@@ -125,7 +125,7 @@ export const ACTIONS = {
   finishFight: (s: S, _c: ActionCtx, inputs: FightInputs): R => resolveFight(s, inputs ?? {})?.state ?? null,
   surrenderRun: (s: S): R => surrenderRun(s)?.state ?? null,
   endRun: (s: S): R => endRun(s),
-  lootTake: (s: S, _c: ActionCtx, index: number, cell?: number): R => lootTake(s, index, cell)?.state ?? null,
+  lootTake: (s: S, _c: ActionCtx, index: number, cell?: number | null): R => lootTake(s, index, cell ?? undefined)?.state ?? null,
   lootDrop: (s: S, _c: ActionCtx, cell: number): R => lootDrop(s, cell),
   lootClose: (s: S): R => lootClose(s),
 
@@ -134,6 +134,80 @@ export const ACTIONS = {
   debugGiveAllItems: (s: S): R => ITEMS.filter((i) => i.blueprintId).reduce((acc, i) => addItem(acc, i.id, 1, maxStackOf(i.id)), s),
   debugHeal: (s: S, _c: ActionCtx, charUid: string): R => healFull(s, charUid),
 } satisfies Record<string, (s: PlayerState, ctx: ActionCtx, ...args: never[]) => PlayerState | null>;
+
+/**
+ * Типы аргументов действий — сервер получает их от клиента как есть и обязан проверить до исполнения:
+ * индекс «null» или «1.5» иначе записался бы в массив как свойство, мимо ячеек.
+ * s — строка, i — целое ≥ 0, b — логическое, o — объект, a — массив, r — слот (целое ≥ 0 или 'rucksack');
+ * «?» после типа — аргумент можно не передавать (undefined или null).
+ */
+export const ACTION_ARGS: Record<keyof typeof ACTIONS, string> = {
+  tick: '',
+  craft: 'o',
+  craftToTarget: 'o s',
+  unlockBlueprint: 's',
+  disassembleItem: 's',
+  disassembleMany: 'a',
+  convertShards: '',
+  moveInventory: 's s?',
+  sortInventory: '',
+  setActiveCharacter: 's',
+  renameCharacter: 's s',
+  editCharacter: 's a',
+  disassembleCharacter: 's',
+  setTarget: 's a',
+  repairAll: 's',
+  drinkPotion: 's o i?',
+  equip: 's r s',
+  unequip: 's r',
+  moveEquipped: 's i i',
+  putInBag: 's i s',
+  takeFromBag: 's i',
+  moveInBag: 's i i',
+  discardFromBag: 's i',
+  equipFromBag: 's i i',
+  stowToBag: 's i',
+  stowToBagCell: 's i i',
+  savePreset: 's i',
+  clearPreset: 's i',
+  applyPreset: 's i',
+  upgradeWeapon: 'o',
+  addGemCell: 'o',
+  setGem: 'o i s? b',
+  startRun: 's',
+  startFight: '',
+  finishFight: 'o',
+  surrenderRun: '',
+  endRun: '',
+  lootTake: 'i i?',
+  lootDrop: 'i',
+  lootClose: '',
+  debugAddCubes: 'i',
+  debugGiveAllItems: '',
+  debugHeal: 's',
+};
+
+const isIndex = (v: unknown) => typeof v === 'number' && Number.isInteger(v) && v >= 0;
+
+function argOk(type: string, v: unknown): boolean {
+  if (type.charAt(type.length - 1) === '?') return v === undefined || v === null || argOk(type.slice(0, -1), v);
+  switch (type) {
+    case 's': return typeof v === 'string' && v.length <= 200;
+    case 'i': return isIndex(v);
+    case 'b': return typeof v === 'boolean';
+    case 'o': return typeof v === 'object' && v !== null && !Array.isArray(v);
+    case 'a': return Array.isArray(v) && v.length <= 1000;
+    case 'r': return isIndex(v) || v === 'rucksack';
+    default: return false;
+  }
+}
+
+/** Подходят ли аргументы действию по типам; лишние аргументы — ошибка. */
+export function argsValid(name: keyof typeof ACTIONS, args: readonly unknown[]): boolean {
+  const types = ACTION_ARGS[name] ? ACTION_ARGS[name].split(' ') : [];
+  if (args.length > types.length) return false;
+  return types.every((type, i) => argOk(type, args[i]));
+}
 
 export type ActionName = keyof typeof ACTIONS;
 export type ActionArgs<K extends ActionName> = (typeof ACTIONS)[K] extends (s: PlayerState, ctx: ActionCtx, ...args: infer A) => unknown ? A : never;
@@ -160,6 +234,9 @@ export interface ActionCall {
  */
 export function applyAction(s: PlayerState, name: string, args: readonly unknown[], ctx: ActionCtx): PlayerState | null {
   if (!isAction(name)) return null;
+  // аргументы приходят и напрямую, и через JSON (сервер): там undefined в массиве становится null —
+  // необязательные аргументы действия обязаны понимать оба значения одинаково (см. тест «через JSON»)
+  if (!argsValid(name, args)) return null;
   const fn = ACTIONS[name] as (s: PlayerState, ctx: ActionCtx, ...args: unknown[]) => PlayerState | null;
   try {
     return withClock(ctx.now, () => fn(s, ctx, ...args));

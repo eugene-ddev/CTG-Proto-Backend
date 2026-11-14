@@ -179,7 +179,7 @@ export function takeLoot(s: PlayerState, charUid: string, e: LootEntry, cell?: n
     left -= n;
   };
   if (cell !== undefined) {
-    if (cell < 0 || cell >= slots.length) return null;
+    if (!Number.isInteger(cell) || cell < 0 || cell >= slots.length) return null;
     putInto(cell);
   } else {
     slots.forEach((x, k) => x && putInto(k));
