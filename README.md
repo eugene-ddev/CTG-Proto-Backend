@@ -13,7 +13,7 @@
 ```bash
 npm install
 npm run up        # собрать и поднять Nakama + Postgres
-npm run logs      # в логе: «CTG-Proto-Backend 0.8.3 ready, core …, self-test: …»
+npm run logs      # в логе: «CTG-Proto-Backend 0.8.4 ready, core …, self-test: …»
 npm run down
 ```
 
@@ -75,11 +75,28 @@ bash deploy/github-env.sh root@<сервер>      # нужен gh: https://cli.
 | `CONSOLE_USER` | переменная | логин консоли Nakama |
 | `CONSOLE_PASSWORD` | секрет | пароль консоли Nakama |
 | `SERVER_KEY`, `HTTP_KEY`, `SESSION_KEY`, `REFRESH_KEY`, `CONSOLE_SIGNING_KEY` | секрет | ключи Nakama — по желанию; смена `SESSION_KEY` разлогинит всех |
+| `TG_BOT_TOKEN` | секрет | токен Telegram-бота для уведомлений (@BotFather → `/newbot`) |
+| `TG_CHAT_ID` | переменная | кому писать (свой id — у @userinfobot; для группы — id группы, бот в ней) |
 
 `POSTGRES_PASSWORD` из GitHub не берётся: Postgres задаёт пароль один раз, при создании базы.
-Значения — без одинарной кавычки. Поменять настройку: `bash deploy/github-env.sh root@<сервер>` (спросит всё заново)
+Значения — без одинарной кавычки; значение `-` убирает настройку с сервера (например, `TG_CHAT_ID=-` выключает
+уведомления). Action передаёт серверу все переменные и секреты окружения, кроме `SSH_*`; сервер берёт только
+известные (`deploy/lib.sh` → `GITHUB_ENV_KEYS`), так что новая настройка не требует правок workflow. Поменять настройку: `bash deploy/github-env.sh root@<сервер>` (спросит всё заново)
 или `gh secret set CONSOLE_PASSWORD --env production -R eugene-ddev/CTG-Proto-Backend`, затем выкладка —
 `gh workflow run deploy.yml -R eugene-ddev/CTG-Proto-Backend` (или Actions → Deploy → Run workflow).
+
+### Слежение и уведомления в Telegram
+
+`deploy/healthcheck.sh` — cron каждую минуту (ставится при выкладке), пишет, только если заданы `TG_BOT_TOKEN`
+и `TG_CHAT_ID`:
+
+- 🔴 игра не работает — две проверки подряд (2 минуты) `system/ping` с `{"db":true}` через Caddy не вернули
+  `"db":true`; в сообщении причина (база или нет ответа), состояние контейнеров и свободное место;
+- 🟢 снова работает — с длительностью простоя;
+- 🟠 на диске меньше 2 ГБ (отбой — больше 3 ГБ).
+
+Во время выкладки проверка пропускается. После выкладки, в которой поменялись `TG_*`, приходит проверочное
+сообщение. Вручную на сервере: `bash deploy/healthcheck.sh --test`.
 
 ### Как устроено
 
@@ -105,6 +122,7 @@ bash deploy/github-env.sh root@<сервер>      # нужен gh: https://cli.
 
 Файлы: `.github/workflows/deploy.yml`, `docker-compose.prod.yml`, `prod.yml` (конфиг Nakama без секретов),
 `deploy/` — `bootstrap.sh`, `github-env.sh` (с рабочей машины), `pull.sh`, `setup.sh`, `update.sh`, `backup.sh`,
+`healthcheck.sh`,
 `lib.sh` (на сервере), `Caddyfile`, `web.Dockerfile`.
 
 ## Общая логика с прототипом

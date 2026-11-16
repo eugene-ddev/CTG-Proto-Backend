@@ -2,7 +2,8 @@
 # Настройка GitHub для выкладки — с рабочей машины, нужен GitHub CLI (https://cli.github.com, затем gh auth login):
 #   bash deploy/github-env.sh root@<сервер> [ssh-порт]
 # Заводит окружение production в CTG-Proto и CTG-Proto-Backend: доступ к серверу (ключ берёт с сервера) и
-# настройки сервера — домен, папка игры, отладка, логин и пароль консоли Nakama. Повторный запуск — поменять их.
+# настройки сервера — домен, папка игры, отладка, логин и пароль консоли Nakama, уведомления в Telegram.
+# Повторный запуск — поменять их.
 # Менять по одной: gh secret set CONSOLE_PASSWORD --env production -R eugene-ddev/CTG-Proto-Backend
 set -euo pipefail
 
@@ -55,6 +56,15 @@ case "$CONSOLE_PASSWORD" in
   *) NEW_PASSWORD="" ;;
 esac
 
+echo
+echo "== Уведомления в Telegram (бот: @BotFather → /newbot; свой chat id: напиши боту @userinfobot)"
+TG_CHAT_ID=$(ask "Chat id (Enter — оставить, «-» — без уведомлений)" "$(current_var TG_CHAT_ID)")
+TG_BOT_TOKEN=""
+if [ -n "$TG_CHAT_ID" ] && [ "$TG_CHAT_ID" != "-" ]; then
+  read -r -s -p "Токен бота (Enter — оставить прежний): " TG_BOT_TOKEN
+  echo
+fi
+
 for repo in "$PROTO" "$BACK"; do
   echo "== $repo: окружение $ENV"
   gh api -X PUT "repos/$repo/environments/$ENV" >/dev/null
@@ -70,6 +80,14 @@ gh variable set GAME_PATH --env "$ENV" -R "$BACK" --body "$GAME_PATH"
 gh variable set CTG_DEBUG --env "$ENV" -R "$BACK" --body "$CTG_DEBUG"
 gh variable set CONSOLE_USER --env "$ENV" -R "$BACK" --body "$CONSOLE_USER"
 [ -z "$CONSOLE_PASSWORD" ] || gh secret set CONSOLE_PASSWORD --env "$ENV" -R "$BACK" --body "$CONSOLE_PASSWORD"
+if [ "$TG_CHAT_ID" = "-" ]; then
+  # «-» — сервер удалит настройку из .env и уведомления выключатся
+  gh variable set TG_CHAT_ID --env "$ENV" -R "$BACK" --body "-"
+  echo "   Telegram: выключен"
+elif [ -n "$TG_CHAT_ID" ]; then
+  gh variable set TG_CHAT_ID --env "$ENV" -R "$BACK" --body "$TG_CHAT_ID"
+  [ -z "$TG_BOT_TOKEN" ] || gh secret set TG_BOT_TOKEN --env "$ENV" -R "$BACK" --body "$TG_BOT_TOKEN"
+fi
 
 echo
 echo "Готово. Консоль: https://$DOMAIN/ — логин $CONSOLE_USER"
