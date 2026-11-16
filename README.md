@@ -80,8 +80,8 @@ bash deploy/github-env.sh root@<сервер>      # нужен gh: https://cli.
 
 `POSTGRES_PASSWORD` из GitHub не берётся: Postgres задаёт пароль один раз, при создании базы.
 Значения — без одинарной кавычки; значение `-` убирает настройку с сервера (например, `TG_CHAT_ID=-` выключает
-уведомления). Action передаёт серверу все переменные и секреты окружения, кроме `SSH_*`; сервер берёт только
-известные (`deploy/lib.sh` → `GITHUB_ENV_KEYS`), так что новая настройка не требует правок workflow. Поменять настройку: `bash deploy/github-env.sh root@<сервер>` (спросит всё заново)
+уведомления). Action передаёт серверу только настройки из явного списка в шаге «Выкладка» (`toJSON(secrets)` GitHub
+справедливо считает вредоносным). Новая настройка: добавить в этот список и в `deploy/lib.sh` → `GITHUB_ENV_KEYS`. Поменять настройку: `bash deploy/github-env.sh root@<сервер>` (спросит всё заново)
 или `gh secret set CONSOLE_PASSWORD --env production -R eugene-ddev/CTG-Proto-Backend`, затем выкладка —
 `gh workflow run deploy.yml -R eugene-ddev/CTG-Proto-Backend` (или Actions → Deploy → Run workflow).
 
