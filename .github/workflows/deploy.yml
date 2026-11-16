@@ -1,6 +1,6 @@
 # Push в main → проверка → выкладка на сервер (deploy/pull.sh по SSH: git pull обоих репозиториев и пересборка).
-# Настройки сервера — окружение production: секреты SSH_* и CONSOLE_PASSWORD, переменные DOMAIN, GAME_PATH, CTG_DEBUG,
-# CONSOLE_USER (завести всё — deploy/github-env.sh). Незаданные значения сервер оставляет свои.
+# Настройки сервера — окружение production: секреты и переменные (список — README, «Настройки — в GitHub»;
+# завести — deploy/github-env.sh). Передаются все, сервер берёт известные; незаданные оставляет свои.
 # Пока окружение не настроено, выкладка пропускается.
 name: Deploy
 
@@ -42,24 +42,19 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_PORT: ${{ secrets.SSH_PORT }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          DOMAIN: ${{ vars.DOMAIN }}
-          GAME_PATH: ${{ vars.GAME_PATH }}
-          CTG_DEBUG: ${{ vars.CTG_DEBUG }}
-          CONSOLE_USER: ${{ vars.CONSOLE_USER }}
-          CONSOLE_PASSWORD: ${{ secrets.CONSOLE_PASSWORD }}
-          CONSOLE_SIGNING_KEY: ${{ secrets.CONSOLE_SIGNING_KEY }}
-          SERVER_KEY: ${{ secrets.SERVER_KEY }}
-          HTTP_KEY: ${{ secrets.HTTP_KEY }}
-          SESSION_KEY: ${{ secrets.SESSION_KEY }}
-          REFRESH_KEY: ${{ secrets.REFRESH_KEY }}
+          ALL_VARS: ${{ toJSON(vars) }}
+          ALL_SECRETS: ${{ toJSON(secrets) }}
         run: |
           install -m 700 -d ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          : > ctg.env
-          for key in DOMAIN GAME_PATH CTG_DEBUG CONSOLE_USER CONSOLE_PASSWORD CONSOLE_SIGNING_KEY SERVER_KEY HTTP_KEY SESSION_KEY REFRESH_KEY; do
-            if [ -n "${!key}" ]; then printf '%s=%s\n' "$key" "${!key}" >> ctg.env; fi
-          done
+          # все переменные и секреты окружения, кроме доступа к серверу; сервер берёт только те, что знает
+          # (deploy/lib.sh → GITHUB_ENV_KEYS) — новая настройка сервера не требует правок этого файла
+          jq -rn --argjson v "$ALL_VARS" --argjson s "$ALL_SECRETS" '
+            $v + $s | to_entries[]
+            | select(.key | test("^(SSH_|GITHUB_|github_token$)") | not)
+            | select((.value | type) == "string" and (.value | test("\n") | not))
+            | "\(.key)=\(.value)"' > ctg.env
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=30 \
             -p "${SSH_PORT:-22}" "${SSH_USER:-root}@$SSH_HOST" deploy < ctg.env
           rm -f ctg.env ~/.ssh/deploy_key
