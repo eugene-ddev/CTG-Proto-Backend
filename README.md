@@ -13,7 +13,7 @@
 ```bash
 npm install
 npm run up        # собрать и поднять Nakama + Postgres
-npm run logs      # в логе: «CTG-Proto-Backend 0.8.2 ready, core …, self-test: …»
+npm run logs      # в логе: «CTG-Proto-Backend 0.8.3 ready, core …, self-test: …»
 npm run down
 ```
 
@@ -90,6 +90,11 @@ bash deploy/github-env.sh root@<сервер>      # нужен gh: https://cli.
 - Правила игры поменялись — push в `CTG-Proto`, потом `npm run sync-core` и push в `CTG-Proto-Backend`. Между ними
   выкладка из `CTG-Proto` остановится на проверке совпадения логики (красный Action) — так и задумано.
 - `index.html` не кешируется: игроки получают новую версию обычным обновлением страницы.
+- Образы собираются на сервере. Перед сборкой: меньше 2 ГБ свободно — чистится весь кэш сборки и неиспользуемые
+  образы, меньше 1 ГБ после чистки — выкладка останавливается. После выкладки — висящие образы и кэш старше двух суток.
+  (16.11.2026 кончилось место — упал Postgres.)
+- Выкладка считается успешной, только если `system/ping` с `{"db":true}` через Caddy отвечает `"db":true`: штатный
+  healthcheck Nakama при лежащей базе отвечает «healthy».
 
 | На сервере (если зайти) | |
 | --- | --- |
@@ -131,7 +136,7 @@ npm run check-core   # проверить, что src/shared совпадает 
 
 | RPC | Вход | Выход |
 | --- | --- | --- |
-| `system/ping` | `{ selfTest?: boolean, seed?: number }` | `{ server, protocol, shared: { proto, digest }, time, selfTest? }` — `selfTest` считает бой двух ботов по seed |
+| `system/ping` | `{ selfTest?: boolean, seed?: number, db?: boolean }` | `{ server, protocol, shared: { proto, digest }, time, selfTest?, db? }` — `selfTest` считает бой двух ботов по seed; `db` — `true` или текст ошибки базы |
 | `player/read` | `{}` | `{ state, rev, serverTime, server, protocol, shared, debug, arena }` — состояние игрока; нет записи — создаётся стартовое. При чтении: бой, прерванный перезагрузкой, засчитывается поражением; кубы чинятся по часам сервера |
 | `player/act` | `{ rev, actions: [{ name, args, now, seed }] }` | `{ ok: true, rev, hash, state?, arena? }` — действия исполнены (`hash` — отпечаток состояния для сверки); `{ ok: false, reason: 'rejected' \| 'conflict', state, rev, action? }` — действие отклонено или ревизия устарела, клиент берёт состояние сервера. Пачка исполняется целиком или не исполняется вовсе |
 | `player/reset` | `{}` | как `player/read` — сброс к стартовому состоянию; только в режиме отладки |

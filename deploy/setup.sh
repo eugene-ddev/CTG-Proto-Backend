@@ -79,7 +79,7 @@ if [ -z "$OURS" ]; then
   [ -z "$BUSY" ] || die "порты 80/443 заняты контейнером: $BUSY— останови его (docker stop $BUSY) и запусти setup.sh снова"
 fi
 
-bash "$BACKEND_DIR/deploy/update.sh"
+CTG_FIRST_RUN=1 bash "$BACKEND_DIR/deploy/update.sh"
 
 HOST=$(env_value DOMAIN)
 GAME_PATH=$(env_value GAME_PATH)
