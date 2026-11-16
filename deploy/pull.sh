@@ -46,7 +46,13 @@ finish() {
 
   # уведомления в Telegram только что заданы или поменялись — проверочное сообщение
   case "$ENV_CHANGED" in
-    *" TG_"*) bash "$BACKEND_DIR/deploy/healthcheck.sh" --test && echo "== Telegram: проверочное сообщение отправлено" ;;
+    *" TG_"*)
+      if bash "$BACKEND_DIR/deploy/healthcheck.sh" --test; then
+        echo "== Telegram: проверочное сообщение отправлено"
+      else
+        echo "!! Telegram: проверочное сообщение не отправлено (причина выше). TG_CHAT_ID — переменная окружения, не секрет"
+      fi
+      ;;
   esac
 }
 

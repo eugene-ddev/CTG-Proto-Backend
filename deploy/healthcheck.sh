@@ -9,15 +9,29 @@ set -uo pipefail
 
 TOKEN=$(env_value TG_BOT_TOKEN)
 CHAT=$(env_value TG_CHAT_ID)
-[ -n "$TOKEN" ] && [ -n "$CHAT" ] || exit 0
+if [ -z "$TOKEN" ] || [ -z "$CHAT" ]; then
+  # проверочное сообщение — явная ошибка (иначе выкладка решит, что всё отправлено); по расписанию — молча
+  [ "${1:-}" = "--test" ] || exit 0
+  echo "Telegram не настроен: нет ${TOKEN:+}$([ -n "$TOKEN" ] || echo "TG_BOT_TOKEN ")$([ -n "$CHAT" ] || echo "TG_CHAT_ID")" >&2
+  exit 1
+fi
 
 STATE="$ROOT_DIR/.health"
 mkdir -p "$STATE"
 URL=$(game_url)
 
 send() {
-  curl -fsS --max-time 15 "https://api.telegram.org/bot$TOKEN/sendMessage" \
-    --data-urlencode "chat_id=$CHAT" --data-urlencode "text=$1" -o /dev/null
+  local reply
+  reply=$(curl -sS --max-time 15 "https://api.telegram.org/bot$TOKEN/sendMessage" \
+    --data-urlencode "chat_id=$CHAT" --data-urlencode "text=$1" 2>&1)
+  case "$reply" in
+    *'"ok":true'*) return 0 ;;
+    *)
+      # ответ Telegram с причиной: неверный токен, chat not found (боту не писали /start) и т. п.
+      echo "Telegram не принял сообщение: $(printf '%s' "$reply" | cut -c1-200)" >&2
+      return 1
+      ;;
+  esac
 }
 
 if [ "${1:-}" = "--test" ]; then
