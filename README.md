@@ -13,7 +13,7 @@
 ```bash
 npm install
 npm run up        # собрать и поднять Nakama + Postgres
-npm run logs      # в логе: «CTG-Proto-Backend 0.8.1 ready, core …, self-test: …»
+npm run logs      # в логе: «CTG-Proto-Backend 0.8.2 ready, core …, self-test: …»
 npm run down
 ```
 
@@ -33,46 +33,74 @@ curl "http://127.0.0.1:7450/v2/rpc/system%2Fping?http_key=defaulthttpkey&unwrap"
 
 ## Выкладка на сервер
 
-Один Linux-сервер с Docker, один домен. Caddy получает сертификат и раздаёт:
+Push в `main` любого из двух репозиториев (`CTG-Proto`, `CTG-Proto-Backend`) → GitHub Actions: проверка, затем
+по SSH на сервере `deploy/pull.sh` — `git pull` обоих клонов в `/opt/ctg` и пересборка. На сервер заходить не нужно.
+
+Один домен, Caddy сам получает сертификат:
 
 | Адрес | Что |
 | --- | --- |
-| `https://<домен>/ctg/` | игра (клиент) и её API: `/ctg/v2`, `/ctg/ws` проксируются в Nakama с отрезанным `/ctg` |
-| `https://<домен>/` | консоль Nakama — она работает только из корня (`/static`, `/v2/console`, свой роутер) |
+| `https://<домен>/ctg/` | игра и её API (`/ctg/v2`, `/ctg/ws` → Nakama, `/ctg` срезается) |
+| `https://<домен>/` | консоль Nakama — работает только из корня |
 
-Клиент ходит на адрес своей страницы вместе с папкой — адрес сервера в сборку не зашивается.
-Папка игры — `GAME_PATH` в `.env` (по умолчанию `/ctg`). GitHub не нужен, только SSH.
+### Первый раз
+
+Из Git Bash в папке `CTG-Proto-Backend`:
 
 ```bash
-# 1. с рабочей машины (Git Bash): отправить закоммиченное состояние CTG-Proto и CTG-Proto-Backend
-bash deploy/push.sh root@<сервер>
+# 1. оба репозитория — на GitHub (выкладка пока пропускается: окружение не настроено)
+git push                      # и в CTG-Proto тоже
 
-# 2. один раз, первая настройка: Docker, секреты, запуск, ежедневные дампы базы
-ssh root@<сервер> "bash /opt/ctg/CTG-Proto-Backend/deploy/setup.sh theruiners.tech"
+# 2. сервер: git, Docker, клоны с GitHub, секреты, запуск, ежедневные дампы базы
+ssh root@<сервер> 'bash -s' < deploy/bootstrap.sh theruiners.tech
 
-# дальше — только шаг 1: push.sh сам пересобирает и перезапускает
+# 3. GitHub: окружение production в обоих репозиториях — доступ к серверу, домен, логин и пароль консоли
+bash deploy/github-env.sh root@<сервер>      # нужен gh: https://cli.github.com, gh auth login
 ```
 
-До шага 2 — A-запись домена на IP сервера, открытые порты 80 и 443, и они не заняты другим веб-сервером
-(`setup.sh` проверит контейнеры). За Cloudflare запись на время первого запуска держать «DNS only» (серое облако),
-иначе Caddy не получит сертификат.
+До шага 2 — A-запись домена на IP сервера, порты 80 и 443 открыты и свободны. За Cloudflare — на первый запуск
+«DNS only», иначе Caddy не получит сертификат. Если репозитории приватные, `bootstrap.sh` покажет deploy-ключи:
+добавить их в Settings → Deploy keys каждого репозитория и запустить шаг 2 ещё раз.
 
-| Что | Где |
+### Настройки — в GitHub
+
+Окружение `production` в `CTG-Proto-Backend` (Settings → Environments). При выкладке заданные значения
+записываются в `/opt/ctg/.env`, незаданные сервер оставляет свои (их сгенерировал `bootstrap.sh`).
+
+| Имя | Вид | Что |
+| --- | --- | --- |
+| `SSH_HOST`, `SSH_PRIVATE_KEY` | секрет | доступ к серверу (`SSH_USER`, `SSH_PORT` — если не root и не 22); то же — в `CTG-Proto` |
+| `DOMAIN`, `GAME_PATH` | переменная | домен и папка игры (`/ctg`) |
+| `CTG_DEBUG` | переменная | `true` — debug-действия и сброс игрока у всех |
+| `CONSOLE_USER` | переменная | логин консоли Nakama |
+| `CONSOLE_PASSWORD` | секрет | пароль консоли Nakama |
+| `SERVER_KEY`, `HTTP_KEY`, `SESSION_KEY`, `REFRESH_KEY`, `CONSOLE_SIGNING_KEY` | секрет | ключи Nakama — по желанию; смена `SESSION_KEY` разлогинит всех |
+
+`POSTGRES_PASSWORD` из GitHub не берётся: Postgres задаёт пароль один раз, при создании базы.
+Значения — без одинарной кавычки. Поменять настройку: `bash deploy/github-env.sh root@<сервер>` (спросит всё заново)
+или `gh secret set CONSOLE_PASSWORD --env production -R eugene-ddev/CTG-Proto-Backend`, затем выкладка —
+`gh workflow run deploy.yml -R eugene-ddev/CTG-Proto-Backend` (или Actions → Deploy → Run workflow).
+
+### Как устроено
+
+- Ключ GitHub Actions лежит на сервере в `authorized_keys` с принудительной командой: им можно только запустить
+  `deploy/pull.sh`, ни shell, ни туннелей.
+- Клоны на сервере — только для выкладки: `pull.sh` делает `reset --hard` на `origin/main`.
+- Push в оба репозитория сразу — две выкладки идут по очереди (блокировка на сервере).
+- Правила игры поменялись — push в `CTG-Proto`, потом `npm run sync-core` и push в `CTG-Proto-Backend`. Между ними
+  выкладка из `CTG-Proto` остановится на проверке совпадения логики (красный Action) — так и задумано.
+- `index.html` не кешируется: игроки получают новую версию обычным обновлением страницы.
+
+| На сервере (если зайти) | |
 | --- | --- |
-| Консоль Nakama | `https://<домен>/`, логин `admin`, пароль — `CONSOLE_PASSWORD` в `.env` (случайный, 32 символа) |
-| Секреты и настройки | `/opt/ctg/.env` (создаёт `setup.sh`, выкладка не трогает) |
-| Дампы базы | `/opt/ctg/backups`, каждый день в 04:17, хранится 14; вручную — `bash deploy/backup.sh` |
-| Режим отладки | `bash deploy/setup.sh --debug` / `--no-debug` (по умолчанию выключен) |
-| Логи | `docker compose --env-file /opt/ctg/.env -f docker-compose.prod.yml logs -f nakama` |
+| `bash deploy/pull.sh` | выкладка вручную |
+| `bash deploy/setup.sh [домен] [--debug \| --no-debug]` | сменить домен или отладку (GitHub при следующей выкладке перезапишет, если там задано) |
+| `bash deploy/backup.sh` | дамп базы; по расписанию — каждый день в 04:17 в `/opt/ctg/backups`, хранится 14 |
+| `docker compose --env-file /opt/ctg/.env -f docker-compose.prod.yml logs -f nakama` | логи |
 
-Файлы: `docker-compose.prod.yml`, `prod.yml` (конфиг Nakama без секретов — они приходят флагами из `.env`),
-`deploy/` — `push.sh` (с рабочей машины), `setup.sh`, `update.sh`, `backup.sh` (на сервере), `Caddyfile`,
-`web.Dockerfile` (сборка клиента). `update.sh` перед сборкой проверяет, что `src/shared` совпадает с прототипом.
-Postgres наружу не публикуется.
-
-Клиент и сервер выкладываются только вместе: при расхождении версии логики вход блокируется.
-Клиент на другом хостинге (Cloudflare Pages) — сборка с `VITE_NAKAMA_HOST`, `VITE_NAKAMA_PORT=443`,
-`VITE_NAKAMA_SSL=true`, `VITE_NAKAMA_KEY=<SERVER_KEY из .env>`.
+Файлы: `.github/workflows/deploy.yml`, `docker-compose.prod.yml`, `prod.yml` (конфиг Nakama без секретов),
+`deploy/` — `bootstrap.sh`, `github-env.sh` (с рабочей машины), `pull.sh`, `setup.sh`, `update.sh`, `backup.sh`,
+`lib.sh` (на сервере), `Caddyfile`, `web.Dockerfile`.
 
 ## Общая логика с прототипом
 

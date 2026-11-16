@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Первая настройка сервера (Linux, от root). Запускается один раз, после deploy/push.sh:
-#   bash deploy/setup.sh <домен> [--debug]
+# Настройка сервера (Linux, от root). Запускает deploy/bootstrap.sh; вручную — чтобы сменить домен или отладку:
+#   bash deploy/setup.sh [<домен>] [--debug | --no-debug]
 # Ставит Docker, создаёт ../.env с секретами, поднимает сервер, включает ежедневные дампы базы.
 # Повторный запуск безопасен: секреты не меняются, обновляются только домен и режим отладки.
 set -euo pipefail
@@ -18,7 +18,7 @@ for arg in "$@"; do
 done
 
 [ "$(id -u)" = 0 ] || die "нужен root (sudo bash deploy/setup.sh …)"
-[ -d "$PROTO_DIR/src/core" ] || die "рядом нет прототипа ($PROTO_DIR) — сначала deploy/push.sh"
+[ -d "$PROTO_DIR/src/core" ] || die "рядом нет прототипа ($PROTO_DIR) — сначала deploy/bootstrap.sh"
 
 if ! command -v docker >/dev/null 2>&1; then
   echo "== Ставлю Docker"

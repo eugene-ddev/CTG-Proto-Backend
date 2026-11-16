@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Пересобрать и перезапустить сервер и клиент из папок на сервере. Вызывается из push.sh и setup.sh:
+# Пересобрать и перезапустить сервер и клиент из папок на сервере (без git pull). Вызывается из pull.sh и setup.sh:
 #   bash deploy/update.sh
 set -euo pipefail
 . "$(dirname "$0")/lib.sh"
@@ -10,7 +10,7 @@ set -euo pipefail
 echo "== Проверяю, что логика сервера совпадает с прототипом"
 docker run --rm -v "$ROOT_DIR:/w:ro" node:22-alpine \
   node /w/CTG-Proto-Backend/scripts/sync-core.mjs --check /w/CTG-Proto ||
-  die "src/shared расходится с прототипом: на рабочей машине npm run sync-core, коммит, снова push.sh"
+  die "src/shared расходится с прототипом: на рабочей машине npm run sync-core, коммит и push в CTG-Proto-Backend"
 
 echo "== Собираю и запускаю"
 compose build
