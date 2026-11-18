@@ -9,9 +9,10 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "type-check": "tsc --noEmit",
-    "up": "docker compose up --build -d",
+    "up": "docker compose up --build -d && npm run clean-images",
     "down": "docker compose down",
-    "logs": "docker compose logs -f nakama"
+    "logs": "docker compose logs -f nakama",
+    "clean-images": "docker image prune -f"
   },
   "dependencies": {
     "nakama-runtime": "github:heroiclabs/nakama-common"

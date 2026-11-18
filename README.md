@@ -4,7 +4,7 @@
 Устроен по примеру `CTG-Backend`, но правила игры не пишутся заново: сервер исполняет ту же логику, что и клиент
 (`src/shared` — копия `CTG-Proto/src/core` и `src/data`), и сам считает бои.
 
-План и статус по этапам — `CTG-Backend/docs/network.md`.
+План и статус по этапам — `docs/network.md`. Все доки по игре (механики, баланс, TODO, идеи, планы этапов) — в `docs/`.
 
 ## Запуск
 
@@ -12,9 +12,10 @@
 
 ```bash
 npm install
-npm run up        # собрать и поднять Nakama + Postgres
+npm run up        # собрать и поднять Nakama + Postgres, удалить осиротевшие образы прошлых сборок
 npm run logs      # в логе: «CTG-Proto-Backend 0.8.4 ready, core …, self-test: …»
 npm run down
+npm run clean-images  # удалить осиротевшие образы вручную
 ```
 
 | Что | Адрес |
