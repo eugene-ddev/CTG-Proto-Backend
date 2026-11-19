@@ -1,12 +1,13 @@
 // Состояние игрока и операции над ним. Чистые функции без Phaser: на вход
 // состояние, на выход новое состояние. Удобно тестировать и потом перенести на сервер.
 import { COMBAT, getItem, hasItem } from '../data/catalog';
+import { resolveSkin } from '../data/skins';
 import { STATS, type StartConfig, type Stat } from '../data/types';
 import type { ArenaRun, LootEntry, PvpPending } from './arena';
 import type { EquipmentPreset } from './preset';
 import type { Bags } from './bag';
 
-export const STATE_VERSION = 6;
+export const STATE_VERSION = 7;
 
 /** Ресурсы — предметы инвентаря (config/resources.json); стопка кубов — 100. */
 export const CUBE_ID = 'cube';
@@ -146,11 +147,16 @@ export function normalizeCharacter(c: CharacterState): CharacterState {
 /** Миграция общая для клиента и сервера; актуальное состояние возвращается тем же объектом. */
 export function normalizeState(s: PlayerState): PlayerState {
   if (s.version >= STATE_VERSION) return s;
+  const needsEquipmentMigration = (s.version ?? 1) < 6;
+  const characters = needsEquipmentMigration ? s.characters.map(normalizeCharacter) : s.characters;
   return {
     ...s,
     version: STATE_VERSION,
-    inventory: s.inventory.filter((e) => hasItem(e.itemId) && getItem(e.itemId).kind !== 'potion' && getItem(e.itemId).kind !== 'bag'),
-    characters: s.characters.map(normalizeCharacter),
+    inventory: needsEquipmentMigration ? s.inventory.filter((e) => hasItem(e.itemId) && getItem(e.itemId).kind !== 'potion' && getItem(e.itemId).kind !== 'bag') : s.inventory,
+    characters: characters.map((c) => {
+      const { skinId, ...original } = c;
+      return skinId && !resolveSkin(c.blueprintId, skinId) ? original : c;
+    }),
   };
 }
 

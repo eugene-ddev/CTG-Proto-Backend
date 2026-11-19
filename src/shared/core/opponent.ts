@@ -3,7 +3,6 @@
 //   оружие под главную стату, артефакт с маной — только вместе с кубами Интеллекта, рюкзак с содержимым (лут).
 // - OPPONENT_PRESETS — пресеты Sandbox Arena клиента (Data/Sandbox/Characters), для тестов и сравнения.
 // Кубы раскладываются по блокам чертежа подряд, в порядке стат (SandboxCharacterConfig.ResolveBlockTypes).
-import { defaultSkinId } from '../data/skins';
 import { weaponLevelName } from '../data/weaponLooks';
 import { BLUEPRINTS, COMBAT, ITEMS, OPPONENTS, getBlueprint, getItem, outOfRotation } from '../data/catalog';
 import { STATS, type BagItem, type CharacterBlueprint, type EffectId, type EquipmentItem, type GemItem, type OpponentsConfig, type Stat } from '../data/types';
@@ -314,7 +313,6 @@ export function buildOpponent(seed: number, playerLevel: number, category?: numb
       rucksack ? `рюкзак: ${bag.length}` : 'без рюкзака',
     ].join(' · '),
     blueprintId: bp.id,
-    skinId: defaultSkinId(bp.id),
     blockStats: layBlocks(bp, counts, layers),
     equipment,
     target: player ? botTarget(player) : [...DEFAULT_TARGET],
