@@ -11,8 +11,7 @@ import { cubeCount, takeItems, uid, type CharacterState, type InventoryEntry, ty
 export interface EquipmentPreset {
   /** itemId по слотам чертежа (руки, артефакты); null — пусто. */
   equipment: Array<string | null>;
-  rucksack: string | null;
-  /** Ячейки рюкзака: что и сколько. */
+  /** Ячейки рюкзака: что и сколько. Уровень самого рюкзака в пресет не входит. */
   bag: Array<{ itemId: string; count: number } | null>;
 }
 
@@ -32,14 +31,13 @@ export const PRESET_MISS_LABEL: Record<PresetMiss, string> = {
   notLearned: 'чертёж ещё не собран вручную — автосборка недоступна',
   noCubes: 'не хватает кубов',
   stats: 'не хватает статов, чтобы надеть',
-  noRucksack: 'нет рюкзака — некуда положить',
+  noRucksack: 'не хватает ячеек рюкзака',
 };
 
 /** Снимок текущего снаряжения бойца. */
 export function presetOf(c: CharacterState): EquipmentPreset {
   return {
     equipment: c.equipment.map((e) => e?.itemId ?? null),
-    rucksack: c.rucksack?.itemId ?? null,
     bag: (c.bag ?? []).map((e) => (e ? { itemId: e.itemId, count: e.count } : null)),
   };
 }
@@ -63,7 +61,7 @@ export function matchesPreset(c: CharacterState, slot = 0): boolean {
     while (out.length && !out[out.length - 1]) out.pop();
     return JSON.stringify(out);
   };
-  return JSON.stringify(cur.equipment) === JSON.stringify(p.equipment) && cur.rucksack === p.rucksack && trim(cur.bag) === trim(p.bag);
+  return JSON.stringify(cur.equipment) === JSON.stringify(p.equipment) && trim(cur.bag) === trim(p.bag);
 }
 
 const busy = (s: PlayerState, charUid: string) => s.arenaRun?.charUid === charUid && (s.arenaRun.wins > 0 || s.arenaRun.inBattle);
@@ -158,9 +156,8 @@ export function applyPreset(s0: PlayerState, charUid: string, slot = 0): { state
     if (it) s = { ...s, inventory: [...s.inventory, { uid: it.uid, itemId: it.itemId, count: 1, ...lv(it) }] };
   };
   c0.equipment.forEach(back);
-  back(c0.rucksack);
   s = emptyBag(s, c0.bag);
-  let c: CharacterState = { ...c0, equipment: c0.equipment.map(() => null), rucksack: null, bag: [] };
+  let c: CharacterState = { ...c0, equipment: c0.equipment.map(() => null), bag: [] };
 
   // одна вещь снаряжения: из инвентаря, иначе собрать
   const fetchOne = (itemId: string): InventoryEntry | null => {
@@ -188,11 +185,7 @@ export function applyPreset(s0: PlayerState, charUid: string, slot = 0): { state
     else report.missing.push({ itemId, count, reason });
   };
 
-  // 2. рюкзак, руки и артефакты
-  if (preset.rucksack && hasItem(preset.rucksack)) {
-    const e = fetchOne(preset.rucksack);
-    if (e) c = { ...c, rucksack: { uid: e.uid, itemId: e.itemId, ...lv(e) } };
-  }
+  // 2. руки и артефакты
   preset.equipment.forEach((itemId, i) => {
     if (!itemId || !hasItem(itemId) || i >= c.equipment.length) return;
     const item = getItem(itemId);
@@ -206,7 +199,7 @@ export function applyPreset(s0: PlayerState, charUid: string, slot = 0): { state
   const cap = bagCapacity(c);
   const bag: Array<InventoryEntry | null> = Array.from({ length: cap }, () => null);
   preset.bag.forEach((cell, k) => {
-    if (!cell || !hasItem(cell.itemId)) return;
+    if (!cell || !hasItem(cell.itemId) || getItem(cell.itemId).kind === 'potion' || getItem(cell.itemId).kind === 'bag') return;
     if (k >= cap) return miss(cell.itemId, cell.count, 'noRucksack');
     const max = maxStackOf(cell.itemId);
     if (max <= 1) {

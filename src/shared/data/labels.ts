@@ -140,7 +140,7 @@ export function variantDescription(v: BlueprintVariant): string {
   const item = getItem(v.itemId);
   if (item.kind === 'gem') return itemDescription(item);
   if (item.kind === 'potion') {
-    return `Чинит ${item.restoreAmount} разбит${item.restoreAmount === 1 ? 'ый куб' : 'ых куба'} ${STAT_LABEL_GEN[item.restoreStat]}. Пьётся из рюкзака между боями серии или в лобби (вне арены кубы и сами восстанавливаются со временем, зелье — сразу), стак до\u00a0${item.maxStack}.`;
+    return `Встроенное зелье персонажа. Один заряд чинит ${item.restoreAmount} разбит${item.restoreAmount === 1 ? 'ый куб' : item.restoreAmount === 5 ? 'ых кубов' : 'ых куба'} ${STAT_LABEL_GEN[item.restoreStat]}. Заряды восстанавливаются при возвращении с арены в лобби.`;
   }
   return item.description;
 }

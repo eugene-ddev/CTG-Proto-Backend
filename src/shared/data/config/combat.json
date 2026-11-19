@@ -2,13 +2,53 @@
  "blockDurability": 100,
  "hiddenBlueprints": [
   "bp-gem",
-  "bp-magic-shield"
+  "bp-magic-shield",
+  "bp-pouch",
+  "bp-rucksack",
+  "bp-rucksack-large",
+  "bp-rucksack-huge",
+  "bp-potion-vial",
+  "bp-potion-flask"
  ],
  "outOfRotation": [
   "rustySpear",
   "rustyKnife"
  ],
  "bagSize": 10,
+ "characterUpgrades": {
+  "alchemistKit": "alchemistKit",
+  "leatherworkerKit": "leatherworkerKit",
+  "potionLevels": [
+   {
+    "charges": 5,
+    "restoreAmount": 3,
+    "itemSuffix": "Vial"
+   },
+   {
+    "charges": 5,
+    "restoreAmount": 5,
+    "itemSuffix": "Flask"
+   }
+  ],
+  "rucksackLevels": [
+   {
+    "capacity": 3,
+    "itemId": "pouch"
+   },
+   {
+    "capacity": 6,
+    "itemId": "rucksack"
+   },
+   {
+    "capacity": 12,
+    "itemId": "rucksackLarge"
+   },
+   {
+    "capacity": 18,
+    "itemId": "rucksackHuge"
+   }
+  ]
+ },
  "stamina": {
   "regenBase": 2,
   "regenShare": 1

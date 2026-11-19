@@ -3,28 +3,15 @@
  "unlockAllBlueprints": false,
  "blueprints": [
   "bp-waran",
-  "bp-sword",
-  "bp-potion-vial",
-  "bp-pouch"
+  "bp-sword"
  ],
- "inventory": [
-  {
-   "itemId": "restoreStrengthVial",
-   "count": 5
-  },
-  {
-   "itemId": "restoreArmorVial",
-   "count": 5
-  },
-  {
-   "itemId": "restoreDexterityVial",
-   "count": 5
-  }
- ],
+ "inventory": [],
  "allItems": true,
  "allItemsCounts": {
   "whetstone": 10,
   "parchment": 10,
-  "jewelerKit": 10
+  "jewelerKit": 10,
+  "alchemistKit": 10,
+  "leatherworkerKit": 10
  }
 }

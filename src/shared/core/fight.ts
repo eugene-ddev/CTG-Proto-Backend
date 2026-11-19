@@ -22,6 +22,7 @@ export function fighterInputOf(c: CharacterState): FighterInput {
   return {
     name: c.name,
     blueprintId: c.blueprintId,
+    skinId: c.skinId,
     blockStats: c.blockStats,
     brokenBlocks: c.brokenBlocks,
     equipment: c.equipment.map((e) => (e && hasItem(e.itemId) ? (itemOf(e) as EquipmentItem) : null)),
@@ -36,6 +37,7 @@ export function rivalOpponent(rival: RivalInfo, seed: number): Opponent {
   return {
     name: rival.name,
     blueprintId: snap.blueprintId,
+    skinId: snap.skinId,
     blockStats: snap.blockStats,
     brokenBlocks: [],
     equipment,

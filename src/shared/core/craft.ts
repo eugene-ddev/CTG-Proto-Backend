@@ -1,6 +1,7 @@
 // Крафт и разборка. Чистые функции над PlayerState.
+import { getBlueprint, inRotation } from '../data/catalog';
 import type { Blueprint, Stat } from '../data/types';
-import { PARCHMENT_ID, addCubes, addItem, cubeCount, removeItem, spendCubes, takeItems, type CharacterState, type PlayerState } from './state';
+import { PARCHMENT_ID, addCubes, addItem, cubeCount, newCharacterPotions, removeItem, spendCubes, takeItems, type CharacterState, type PlayerState } from './state';
 import { returnGems } from './upgrade';
 
 export const craftCost = (bp: Blueprint) => bp.blocks.length;
@@ -27,7 +28,7 @@ export interface CompleteCraftOpts {
   variantKey?: string;
   /** true — собрано вручную: открывает автосборку. */
   manual: boolean;
-  /** Сколько штук кладётся в стопку (у зелий — 5). */
+  /** Сколько штук кладётся в стопку. */
   maxStack: (itemId: string) => number;
   /** У персонажа: стата каждого блока по индексу в чертеже. */
   blockStats?: Stat[];
@@ -46,6 +47,7 @@ const hasGap = (stats: readonly (string | undefined)[]) => {
 
 /** Почему completeCraft вернёт null — текст для игрока; null, если собрать можно. */
 export function craftFailure(s: PlayerState, bp: Blueprint, opts: CompleteCraftOpts): string | null {
+  if (!inRotation(bp)) return 'Этот чертёж недоступен для сборки.';
   if (!s.unlockedBlueprints.includes(bp.id)) return 'Чертёж не открыт.';
   const result = craftResult(bp, opts.variantKey);
   if (!result) return 'Не выбран вариант (стата или стихия).';
@@ -57,7 +59,7 @@ export function craftFailure(s: PlayerState, bp: Blueprint, opts: CompleteCraftO
 }
 
 export function completeCraft(s: PlayerState, bp: Blueprint, opts: CompleteCraftOpts): { state: PlayerState; result: CraftResult } | null {
-  if (!s.unlockedBlueprints.includes(bp.id)) return null;
+  if (!inRotation(bp) || !s.unlockedBlueprints.includes(bp.id)) return null;
   const result = craftResult(bp, opts.variantKey);
   if (!result) return null;
   if (!opts.manual && !canAutoCraft(s, bp.id)) return null;
@@ -75,7 +77,8 @@ export function completeCraft(s: PlayerState, bp: Blueprint, opts: CompleteCraft
       blockStats: [...stats],
       brokenBlocks: [],
       equipment: bp.kind === 'character' ? bp.slots.map(() => null) : [],
-      rucksack: null,
+      rucksackLevel: 1,
+      potions: newCharacterPotions(),
       bag: [],
     };
     next = { ...next, characters: [...next.characters, character], nextUid: next.nextUid + 1 };
@@ -127,7 +130,7 @@ export const isUnlocked = (s: PlayerState, blueprintId: string) => s.unlockedBlu
 
 /** Открыть чертёж за чистый пергамент. null — уже открыт или пергамента не хватает. */
 export function unlockBlueprint(s: PlayerState, blueprintId: string): PlayerState | null {
-  if (isUnlocked(s, blueprintId)) return null;
+  if (!inRotation(getBlueprint(blueprintId)) || isUnlocked(s, blueprintId)) return null;
   const paid = takeItems(s, PARCHMENT_ID, UNLOCK_COST);
   return paid ? { ...paid, unlockedBlueprints: [...paid.unlockedBlueprints, blueprintId] } : null;
 }

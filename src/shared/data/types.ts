@@ -205,7 +205,7 @@ export interface PotionItem extends ItemBase {
 export interface ResourceItem extends ItemBase {
   kind: 'resource';
   /** Какой значок рисовать (у ресурсов нет чертежа). */
-  icon: 'cube' | 'shard' | 'whetstone' | 'parchment' | 'jeweler';
+  icon: 'cube' | 'shard' | 'whetstone' | 'parchment' | 'jeweler' | 'alchemist' | 'leatherworker';
   tint: string;
   maxStack: number;
 }
@@ -262,6 +262,13 @@ export interface CombatConfig {
   weaponLevels: { max: number; cost: number[]; extraShare: number; perks: Record<string, WeaponPerk[]> };
   /** Ячейки камней в оружии: максимум и предмет, который тратится на одну ячейку (ювелирный набор). */
   gemCells: { max: number; itemId: string };
+  /** Встроенные зелья и рюкзак персонажа: один набор тратится на следующий уровень. */
+  characterUpgrades: {
+    alchemistKit: string;
+    leatherworkerKit: string;
+    potionLevels: Array<{ charges: number; restoreAmount: number; itemSuffix: 'Vial' | 'Flask' }>;
+    rucksackLevels: Array<{ capacity: number; itemId: string }>;
+  };
   /** Реген выносливости за ход: regenBase + regenShare × максимум (1 — вся восстанавливается каждый ход, 0.0.70). */
   stamina: { regenBase: number; regenShare: number };
   /** Параметры схем удара. */
@@ -302,21 +309,19 @@ export interface OpponentsConfig {
   rucksackChance: number;
   /** Сколько ячеек рюкзака занято [min, max] (не больше вместимости). */
   bagItems: [number, number];
-  /** Шанс, что предмет в рюкзаке — запасное оружие (иначе зелье). */
+  /** Шанс, что занятая ячейка рюкзака бота содержит запасное оружие; иначе ячейка пуста. */
   spareWeaponChance: number;
-  /** Зелий в стопке [min, max]. */
-  potionStack: [number, number];
 }
 
 /** Серия арены (config/arena.json). */
 export interface ArenaConfig {
   /** Боёв в серии; награда — за победу в последнем. */
   seriesLength: number;
-  /** Повторов проигранного боя на всю серию; кончились — поражение (оружие и рюкзак пропадают). */
+  /** Повторов проигранного боя на всю серию; кончились — поражение (по loss могут пропасть оружие и содержимое рюкзака). */
   retries: number;
   /**
-   * Что происходит при поражении в серии: keep — всё остаётся у бойца, drop — пропадают оружие в руках и рюкзак
-   * с содержимым. Отдельно для серии с ботами и с игроками.
+   * Что происходит при поражении в серии: keep — всё остаётся у бойца, drop — пропадают оружие в руках и
+   * содержимое рюкзака. Сам встроенный рюкзак и его уровень остаются.
    */
   loss?: { bots: 'keep' | 'drop'; players: 'keep' | 'drop' };
   /** Награда защитнику, отбившему нападение игрока: кубы и один вариант из reward.drops. */

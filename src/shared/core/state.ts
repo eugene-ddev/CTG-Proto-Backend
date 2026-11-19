@@ -1,11 +1,12 @@
 // Состояние игрока и операции над ним. Чистые функции без Phaser: на вход
 // состояние, на выход новое состояние. Удобно тестировать и потом перенести на сервер.
-import type { StartConfig, Stat } from '../data/types';
+import { COMBAT, getItem, hasItem } from '../data/catalog';
+import { STATS, type StartConfig, type Stat } from '../data/types';
 import type { ArenaRun, LootEntry, PvpPending } from './arena';
 import type { EquipmentPreset } from './preset';
 import type { Bags } from './bag';
 
-export const STATE_VERSION = 4;
+export const STATE_VERSION = 6;
 
 /** Ресурсы — предметы инвентаря (config/resources.json); стопка кубов — 100. */
 export const CUBE_ID = 'cube';
@@ -15,7 +16,7 @@ export const SHARD_STACK = 100;
 export const WHETSTONE_ID = 'whetstone';
 export const PARCHMENT_ID = 'parchment';
 
-/** Предмет в инвентаре. Зелья и ресурсы лежат стопкой (count), снаряжение — по одному. */
+/** Предмет в инвентаре. Ресурсы лежат стопкой (count), снаряжение — по одному. */
 export interface InventoryEntry {
   uid: string;
   itemId: string;
@@ -41,6 +42,12 @@ export interface EquippedItem {
  * Персонаж. Появляется сразу после крафта по чертежу — с именем по умолчанию и без снаряжения;
  * снаряжение и имя меняются в окне «Персонажи», статы блоков — нет.
  */
+export interface CharacterPotion {
+  /** 1 — малое зелье, 2 — флакон. */
+  level: number;
+  charges: number;
+}
+
 export interface CharacterState {
   uid: string;
   name: string;
@@ -51,11 +58,15 @@ export interface CharacterState {
   brokenBlocks: number[];
   /** Снаряжение по слотам чертежа (руки, артефакты), null — пусто. */
   equipment: Array<EquippedItem | null>;
-  /** Рюкзак — отдельный слот, не из чертежа. */
-  rucksack: EquippedItem | null;
+  /** Постоянный рюкзак персонажа: уровень 1–4, вместимость — из characterUpgrades. */
+  rucksackLevel: number;
+  /** Встроенные зелья по статам; заряды восстанавливаются при возвращении в лобби. */
+  potions: Record<Stat, CharacterPotion>;
+  /** Выбранный визуальный скин; нет — скин по умолчанию для чертежа. */
+  skinId?: string;
   /** Порядок стат, в котором боец бьёт блоки противника (экран «Новый противник»). */
   target?: Stat[];
-  /** Содержимое рюкзака по его ячейкам (зелья стопками, лут поштучно); длина = вместимость надетого рюкзака. */
+  /** Содержимое встроенного рюкзака по ячейкам (ресурсы стопками, снаряжение поштучно). */
   bag: Array<InventoryEntry | null>;
   /** С какого момента идёт восстановление разбитых кубов (мс); undefined — чинить нечего. */
   lobbySince?: number;
@@ -90,6 +101,59 @@ export interface PlayerState {
   bags: Bags;
 }
 
+export function newCharacterPotions(): Record<Stat, CharacterPotion> {
+  const first = COMBAT.characterUpgrades.potionLevels[0];
+  return Object.fromEntries(STATS.map((stat) => [stat, { level: 1, charges: first.charges }])) as Record<Stat, CharacterPotion>;
+}
+
+export function refillCharacterPotions(c: CharacterState): CharacterState {
+  const levels = COMBAT.characterUpgrades.potionLevels;
+  return {
+    ...c,
+    potions: Object.fromEntries(STATS.map((stat) => {
+      const p = c.potions[stat];
+      return [stat, { ...p, charges: levels[p.level - 1].charges }];
+    })) as Record<Stat, CharacterPotion>,
+  };
+}
+
+export const potionItemId = (stat: Stat, level: number) => `restore${stat}${COMBAT.characterUpgrades.potionLevels[level - 1].itemSuffix}`;
+export const potionItemOf = (c: CharacterState, stat: Stat) => getItem(potionItemId(stat, c.potions[stat].level));
+
+/** Добавить поля встроенных зелий и рюкзака персонажу из старого сейва. */
+export function normalizeCharacter(c: CharacterState): CharacterState {
+  const legacy = c as CharacterState & { rucksack?: EquippedItem | null };
+  const bags = COMBAT.characterUpgrades.rucksackLevels;
+  const fromItem = legacy.rucksack ? bags.findIndex((b) => b.itemId === legacy.rucksack!.itemId) + 1 : 0;
+  const rucksackLevel = Number.isInteger(c.rucksackLevel) && c.rucksackLevel >= 1 && c.rucksackLevel <= bags.length ? c.rucksackLevel : fromItem || 1;
+  const potionLevels = COMBAT.characterUpgrades.potionLevels;
+  const potions = Object.fromEntries(STATS.map((stat) => {
+    const p = c.potions?.[stat];
+    const level = p && Number.isInteger(p.level) && p.level >= 1 && p.level <= potionLevels.length ? p.level : 1;
+    const max = potionLevels[level - 1].charges;
+    const charges = p && Number.isInteger(p.charges) ? Math.max(0, Math.min(max, p.charges)) : max;
+    return [stat, { level, charges }];
+  })) as Record<Stat, CharacterPotion>;
+  const { rucksack: _old, ...rest } = legacy;
+  return {
+    ...rest,
+    rucksackLevel,
+    potions,
+    bag: (c.bag ?? []).map((e) => e && hasItem(e.itemId) && getItem(e.itemId).kind !== 'potion' && getItem(e.itemId).kind !== 'bag' ? e : null),
+  };
+}
+
+/** Миграция общая для клиента и сервера; актуальное состояние возвращается тем же объектом. */
+export function normalizeState(s: PlayerState): PlayerState {
+  if (s.version >= STATE_VERSION) return s;
+  return {
+    ...s,
+    version: STATE_VERSION,
+    inventory: s.inventory.filter((e) => hasItem(e.itemId) && getItem(e.itemId).kind !== 'potion' && getItem(e.itemId).kind !== 'bag'),
+    characters: s.characters.map(normalizeCharacter),
+  };
+}
+
 /**
  * Состояние нового игрока. allItemIds — все предметы игры: с `start.allItems` каждый кладётся полной стопкой,
  * кроме перечисленных в `start.allItemsCounts` — их столько, сколько там указано (кубы — отдельно, `start.cubes`).
@@ -110,10 +174,16 @@ export function createInitialState(start: StartConfig, allBlueprintIds: string[]
   if (start.allItems && allItemIds.length) {
     // количество из start.allItemsCounts важнее полной стопки (точильные камни, пергамент, ювелирный набор — по 10)
     const counts = start.allItemsCounts ?? {};
-    for (const itemId of allItemIds) if (itemId !== CUBE_ID) s = addItem(s, itemId, counts[itemId] ?? maxStack(itemId), maxStack(itemId));
+    for (const itemId of allItemIds) {
+      const kind = hasItem(itemId) ? getItem(itemId).kind : null;
+      if (itemId !== CUBE_ID && kind !== 'potion' && kind !== 'bag') s = addItem(s, itemId, counts[itemId] ?? maxStack(itemId), maxStack(itemId));
+    }
     return s;
   }
-  for (const { itemId, count } of start.inventory) s = addItem(s, itemId, count, maxStack(itemId));
+  for (const { itemId, count } of start.inventory) {
+    const kind = hasItem(itemId) ? getItem(itemId).kind : null;
+    if (kind !== 'potion' && kind !== 'bag') s = addItem(s, itemId, count, maxStack(itemId));
+  }
   return s;
 }
 
@@ -182,7 +252,7 @@ export function addItem(s: PlayerState, itemId: string, count = 1, maxStack = 1)
 }
 
 /**
- * Перетащить запись инвентаря на место другой: то же зелье — докладывается до максимума стопки
+ * Перетащить запись инвентаря на место другой: тот же ресурс — докладывается до максимума стопки
  * (остаток остаётся), другое — меняются местами. toUid = null — в конец списка.
  */
 export function moveInventory(s: PlayerState, fromUid: string, toUid: string | null, maxStack: (itemId: string) => number): PlayerState | null {

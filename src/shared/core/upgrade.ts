@@ -6,7 +6,8 @@
 //   (itemOf в core/character.ts); два одинаковых камня в одно оружие не ставятся — эффект не складывается.
 // Чистые функции над PlayerState.
 import { COMBAT, getItem, hasItem, maxStackOf } from '../data/catalog';
-import { WHETSTONE_ID, addItem, itemCount, takeItems, type PlayerState } from './state';
+import { STATS, type Stat } from '../data/types';
+import { WHETSTONE_ID, addItem, itemCount, takeItems, type CharacterState, type PlayerState } from './state';
 
 /** Что качаем: запись инвентаря или оружие в слоте бойца. */
 export type UpgradeTarget = { kind: 'inv'; uid: string } | { kind: 'equip'; charUid: string; slot: number } | { kind: 'bag'; charUid: string; cell: number };
@@ -77,6 +78,61 @@ export function upgradeWeapon(s: PlayerState, t: UpgradeTarget): PlayerState | n
   if (!paid) return null;
   const level = info.level + 1;
   return patchEntry(paid, t, (e) => ({ ...e, level }));
+}
+
+// ───────────── встроенные зелья и рюкзак ─────────────
+
+export interface CharacterUpgradeInfo {
+  level: number;
+  max: number;
+  cost: 1;
+  have: number;
+  ok: boolean;
+  reason?: 'max' | 'notCharacter';
+}
+
+function patchCharacter(s: PlayerState, charUid: string, fn: (c: CharacterState) => CharacterState): PlayerState {
+  return { ...s, characters: s.characters.map((c) => c.uid === charUid ? fn(c) : c) };
+}
+
+export function potionUpgradeInfo(s: PlayerState, charUid: string, stat: Stat): CharacterUpgradeInfo | null {
+  if (!STATS.includes(stat)) return null;
+  const c = s.characters.find((x) => x.uid === charUid);
+  if (!c) return null;
+  const level = c.potions[stat].level;
+  const max = COMBAT.characterUpgrades.potionLevels.length;
+  const have = itemCount(s, COMBAT.characterUpgrades.alchemistKit);
+  const reason = level >= max ? 'max' as const : undefined;
+  return { level, max, cost: 1, have, ok: !reason && have >= 1, reason };
+}
+
+/** Улучшить одно зелье до следующего уровня и наполнить его. */
+export function upgradePotion(s: PlayerState, charUid: string, stat: Stat): PlayerState | null {
+  const info = potionUpgradeInfo(s, charUid, stat);
+  if (!info?.ok) return null;
+  const paid = takeItems(s, COMBAT.characterUpgrades.alchemistKit, 1);
+  if (!paid) return null;
+  const level = info.level + 1;
+  const charges = COMBAT.characterUpgrades.potionLevels[level - 1].charges;
+  return patchCharacter(paid, charUid, (c) => ({ ...c, potions: { ...c.potions, [stat]: { level, charges } } }));
+}
+
+export function rucksackUpgradeInfo(s: PlayerState, charUid: string): CharacterUpgradeInfo | null {
+  const c = s.characters.find((x) => x.uid === charUid);
+  if (!c) return null;
+  const level = c.rucksackLevel;
+  const max = COMBAT.characterUpgrades.rucksackLevels.length;
+  const have = itemCount(s, COMBAT.characterUpgrades.leatherworkerKit);
+  const reason = level >= max ? 'max' as const : undefined;
+  return { level, max, cost: 1, have, ok: !reason && have >= 1, reason };
+}
+
+/** Увеличить постоянный рюкзак на следующий уровень, содержимое сохраняется. */
+export function upgradeRucksack(s: PlayerState, charUid: string): PlayerState | null {
+  const info = rucksackUpgradeInfo(s, charUid);
+  if (!info?.ok) return null;
+  const paid = takeItems(s, COMBAT.characterUpgrades.leatherworkerKit, 1);
+  return paid ? patchCharacter(paid, charUid, (c) => ({ ...c, rucksackLevel: info.level + 1 })) : null;
 }
 
 // ───────────── ячейки камней (ювелирный набор) ─────────────

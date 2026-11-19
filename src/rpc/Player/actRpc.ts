@@ -2,6 +2,7 @@ import { protectedRpc } from '@lib/protectedRpc'
 import { GRPCErrorCode, makeErrorResponse } from '@lib/response'
 import { isDebugMode } from '@lib/debug'
 import { applyAction, isAction, isDebugAction, isServerSeeded, stateHash, type ActionCall } from '@shared/core/actions'
+import { normalizeState } from '@shared/core/state'
 import { readOrCreatePlayer } from '../../entities/Player/storage'
 import { commitPlayer } from '../../entities/Player/commit'
 
@@ -25,14 +26,15 @@ export const actRpc = protectedRpc('player/act', (userId, payload, ctx, logger, 
   }
 
   const stored = readOrCreatePlayer(nk, userId)
+  const currentState = normalizeState(stored.record.state)
   if (stored.record.rev !== input.rev) {
     logger.info(`[player/act] Conflict user=${userId} client=${input.rev} server=${stored.record.rev}`)
-    return JSON.stringify({ ok: false, reason: 'conflict', state: stored.record.state, rev: stored.record.rev })
+    return JSON.stringify({ ok: false, reason: 'conflict', state: currentState, rev: stored.record.rev })
   }
 
   const debug = isDebugMode(ctx)
   const serverNow = Date.now()
-  let state = stored.record.state
+  let state = currentState
   let seededByServer = false
   for (const call of input.actions) {
     const name = String(call && call.name)
@@ -44,7 +46,7 @@ export const actRpc = protectedRpc('player/act', (userId, payload, ctx, logger, 
     const next = allowed ? applyAction(state, name, call.args, { now, seed }) : null
     if (!next) {
       logger.info(`[player/act] Rejected user=${userId} action=${name}`)
-      return JSON.stringify({ ok: false, reason: 'rejected', action: name, state: stored.record.state, rev: stored.record.rev })
+      return JSON.stringify({ ok: false, reason: 'rejected', action: name, state: currentState, rev: stored.record.rev })
     }
     state = next
   }

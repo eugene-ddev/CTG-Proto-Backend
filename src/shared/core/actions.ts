@@ -6,10 +6,10 @@ import { getBlueprint, getItem, hasBlueprint, ITEMS, maxStackOf } from '../data/
 import type { ItemKind, Stat } from '../data/types';
 import {
   convertShards, drinkPotion, endRun, equipFromBag, healFull, lobbyRegen, lootClose, lootDrop, lootTake, repairAll, startFight, startRun, stowToBag,
-  stowToBagCell, surrenderRun, type PotionSource,
+  stowToBagCell, surrenderRun,
 } from './arena';
 import {
-  discardFromBag, disassembleCharacter, equip, moveEquipped, moveInBag, putInBag, renameCharacter, setCharacterTarget, takeFromBag, unequip,
+  discardFromBag, disassembleCharacter, equip, moveEquipped, moveInBag, putInBag, renameCharacter, setCharacterSkin, setCharacterTarget, takeFromBag, unequip,
   type SlotRef,
 } from './character';
 import { withClock } from './clock';
@@ -19,7 +19,7 @@ import { applyCharacterEdit } from './edit';
 import { resolveFight, type FightInputs } from './fight';
 import { applyPreset, clearPreset, savePreset } from './preset';
 import { addCubes, addItem, moveInventory, sortInventory, type InventoryEntry, type PlayerState } from './state';
-import { addGemCell, insertGem, removeGem, upgradeWeapon, type UpgradeTarget } from './upgrade';
+import { addGemCell, insertGem, removeGem, upgradePotion, upgradeRucksack, upgradeWeapon, type UpgradeTarget } from './upgrade';
 
 export interface ActionCtx {
   /** Время действия, мс (часы сервера; клиент присылает свою оценку). */
@@ -74,7 +74,7 @@ export const ACTIONS = {
     return r ? r.state : null;
   },
   craftToTarget: (s: S, _c: ActionCtx, target: CraftTarget, itemId: string): R => applyTarget(s, target, itemId),
-  unlockBlueprint: (s: S, _c: ActionCtx, blueprintId: string): R => unlockBlueprint(s, blueprintId),
+  unlockBlueprint: (s: S, _c: ActionCtx, blueprintId: string): R => hasBlueprint(blueprintId) ? unlockBlueprint(s, blueprintId) : null,
   disassembleItem: (s: S, _c: ActionCtx, entryUid: string): R => disassembleItem(s, entryUid, blueprintOf),
   disassembleMany: (s: S, _c: ActionCtx, entryUids: string[]): R => disassembleMany(s, entryUids, blueprintOf),
   convertShards: (s: S): R => convertShards(s),
@@ -87,11 +87,14 @@ export const ACTIONS = {
   setActiveCharacter: (s: S, _c: ActionCtx, charUid: string): R =>
     s.arenaRun || !s.characters.some((c) => c.uid === charUid) ? null : { ...s, lastArenaCharacterId: charUid },
   renameCharacter: (s: S, _c: ActionCtx, charUid: string, name: string): R => renameCharacter(s, charUid, name),
+  setSkin: (s: S, _c: ActionCtx, charUid: string, skinId: string): R => setCharacterSkin(s, charUid, skinId),
   editCharacter: (s: S, _c: ActionCtx, charUid: string, cells: Array<Stat | null>): R => applyCharacterEdit(s, charUid, cells),
   disassembleCharacter: (s: S, _c: ActionCtx, charUid: string): R => disassembleCharacter(s, charUid),
   setTarget: (s: S, _c: ActionCtx, charUid: string, order: Stat[]): R => setCharacterTarget(s, charUid, order),
   repairAll: (s: S, _c: ActionCtx, charUid: string): R => repairAll(s, charUid),
-  drinkPotion: (s: S, _c: ActionCtx, charUid: string, src: PotionSource, prefer?: number | null): R => drinkPotion(s, charUid, src, prefer ?? undefined),
+  drinkPotion: (s: S, _c: ActionCtx, charUid: string, stat: Stat, prefer?: number | null): R => drinkPotion(s, charUid, stat, prefer ?? undefined),
+  upgradePotion: (s: S, _c: ActionCtx, charUid: string, stat: Stat): R => upgradePotion(s, charUid, stat),
+  upgradeRucksack: (s: S, _c: ActionCtx, charUid: string): R => upgradeRucksack(s, charUid),
 
   // ── снаряжение и рюкзак ──
   equip: (s: S, _c: ActionCtx, charUid: string, slot: SlotRef, invUid: string): R => equip(s, charUid, slot, invUid),
@@ -132,8 +135,8 @@ export const ACTIONS = {
 
   // ── отладка (сервер исполняет только в режиме отладки) ──
   debugAddCubes: (s: S, _c: ActionCtx, amount: number): R => addCubes(s, Math.max(0, Math.min(10000, Math.floor(amount)))),
-  /** Все предметы игры, каждого — полная стопка (снаряжение — по одной штуке). */
-  debugGiveAllItems: (s: S): R => ITEMS.reduce((acc, i) => addItem(acc, i.id, maxStackOf(i.id), maxStackOf(i.id)), s),
+  /** Все предметы инвентаря, каждого — полная стопка (снаряжение — по одной штуке). */
+  debugGiveAllItems: (s: S): R => ITEMS.filter((i) => i.kind !== 'potion' && i.kind !== 'bag').reduce((acc, i) => addItem(acc, i.id, maxStackOf(i.id), maxStackOf(i.id)), s),
   debugHeal: (s: S, _c: ActionCtx, charUid: string): R => healFull(s, charUid),
 } satisfies Record<string, (s: PlayerState, ctx: ActionCtx, ...args: never[]) => PlayerState | null>;
 
@@ -155,11 +158,14 @@ export const ACTION_ARGS: Record<keyof typeof ACTIONS, string> = {
   sortInventory: '',
   setActiveCharacter: 's',
   renameCharacter: 's s',
+  setSkin: 's s',
   editCharacter: 's a',
   disassembleCharacter: 's',
   setTarget: 's a',
   repairAll: 's',
-  drinkPotion: 's o i?',
+  drinkPotion: 's s i?',
+  upgradePotion: 's s',
+  upgradeRucksack: 's',
   equip: 's r s',
   unequip: 's r',
   moveEquipped: 's i i',

@@ -28,9 +28,5 @@
   1,
   4
  ],
- "spareWeaponChance": 0.3,
- "potionStack": [
-  1,
-  3
- ]
+ "spareWeaponChance": 0.3
 }

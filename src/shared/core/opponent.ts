@@ -3,9 +3,10 @@
 //   оружие под главную стату, артефакт с маной — только вместе с кубами Интеллекта, рюкзак с содержимым (лут).
 // - OPPONENT_PRESETS — пресеты Sandbox Arena клиента (Data/Sandbox/Characters), для тестов и сравнения.
 // Кубы раскладываются по блокам чертежа подряд, в порядке стат (SandboxCharacterConfig.ResolveBlockTypes).
+import { defaultSkinId } from '../data/skins';
 import { weaponLevelName } from '../data/weaponLooks';
 import { BLUEPRINTS, COMBAT, ITEMS, OPPONENTS, getBlueprint, getItem, outOfRotation } from '../data/catalog';
-import { STATS, type BagItem, type CharacterBlueprint, type EffectId, type EquipmentItem, type GemItem, type OpponentsConfig, type PotionItem, type Stat } from '../data/types';
+import { STATS, type BagItem, type CharacterBlueprint, type EffectId, type EquipmentItem, type GemItem, type OpponentsConfig, type Stat } from '../data/types';
 import { DEFAULT_TARGET, createFighter, digGoal, type FighterInput } from './battle';
 import { layeredStats } from './layout';
 import { createRng } from './rng';
@@ -181,11 +182,6 @@ function layBlocks(bp: CharacterBlueprint, counts: Record<Stat, number>, order: 
   return bp.blocks.map((_, i) => plan.get(i) ?? 'Stamina'); // недобор — выносливостью, как в пресетах
 }
 
-function potionFor(stat: Stat, d: DrawSource): PotionItem | null {
-  const pool = ITEMS.filter((i): i is PotionItem => i.kind === 'potion' && i.restoreStat === stat);
-  return pool.length ? d.pick(`bot.potion.${stat}`, pool, (p) => p.id) : null;
-}
-
 function withGems(base: EquipmentItem, level: number, d: DrawSource): { item: EquipmentItem; gems: GemItem[] } {
   const pool = ITEMS.filter((i): i is GemItem => i.kind === 'gem');
   // ячеек у оружия бота — из мешка, 0 … уровень − 1 (у игрока ячейки создаёт ювелирный набор)
@@ -299,14 +295,8 @@ export function buildOpponent(seed: number, playerLevel: number, category?: numb
     const r = d.pick('bot.rucksackItem', bags, (b) => b.id);
     rucksack = r.id;
     const n = Math.min(r.capacity, drawInt(d, 'bot.bagItems', cfg.bagItems[0], cfg.bagItems[1]));
-    const statPool = STATS.filter((s) => counts[s] > 0);
     for (let k = 0; k < n; k++) {
-      if (d.chance('bot.spareWeapon', cfg.spareWeaponChance)) {
-        bag.push({ itemId: d.pick(`bot.spare.${main}`, mainWeapons, (w) => w.id).id, count: 1 });
-        continue;
-      }
-      const pot = potionFor(d.pick('bot.potionStat', statPool), d);
-      if (pot) bag.push({ itemId: pot.id, count: Math.min(pot.maxStack, drawInt(d, 'bot.potionStack', cfg.potionStack[0], cfg.potionStack[1])) });
+      if (d.chance('bot.spareWeapon', cfg.spareWeaponChance)) bag.push({ itemId: d.pick(`bot.spare.${main}`, mainWeapons, (w) => w.id).id, count: 1 });
     }
   }
 
@@ -324,6 +314,7 @@ export function buildOpponent(seed: number, playerLevel: number, category?: numb
       rucksack ? `рюкзак: ${bag.length}` : 'без рюкзака',
     ].join(' · '),
     blueprintId: bp.id,
+    skinId: defaultSkinId(bp.id),
     blockStats: layBlocks(bp, counts, layers),
     equipment,
     target: player ? botTarget(player) : [...DEFAULT_TARGET],

@@ -6375,7 +6375,7 @@
   "kind": "potion",
   "name": "Малый флакон",
   "variantLabel": "Стата",
-  "restoreAmount": 1,
+  "restoreAmount": 3,
   "variants": [
    {
     "key": "Armor",
@@ -6483,7 +6483,7 @@
   "kind": "potion",
   "name": "Большой флакон",
   "variantLabel": "Стата",
-  "restoreAmount": 3,
+  "restoreAmount": 5,
   "variants": [
    {
     "key": "Armor",

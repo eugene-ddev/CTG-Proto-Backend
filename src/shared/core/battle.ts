@@ -80,6 +80,8 @@ export interface Fighter {
   side: Side;
   name: string;
   blueprintId: string;
+  /** Визуальный скин, не участвует в расчёте боя. */
+  skinId?: string;
   blocks: BattleBlock[];
   /** Боевые статы: стартуют со статов персонажа, −1 за каждый разбитый куб (Stats.AdjustStats). */
   stats: Record<'Armor' | 'Strength' | 'Dexterity' | 'Luck', number>;
@@ -143,6 +145,8 @@ export interface BattleState {
 export interface FighterInput {
   name: string;
   blueprintId: string;
+  /** Визуальный скин; на расчёт боя не влияет. */
+  skinId?: string;
   blockStats: readonly Stat[];
   brokenBlocks?: readonly number[];
   /** Предметы по слотам чертежа (null — пусто). */
@@ -203,6 +207,7 @@ export function createFighter(side: Side, input: FighterInput): Fighter {
     side,
     name: input.name,
     blueprintId: bp.id,
+    skinId: input.skinId,
     blocks,
     stats: { Armor: st.current.Armor, Strength: st.current.Strength, Dexterity: st.current.Dexterity, Luck: st.current.Luck },
     entryStats: { Strength: st.current.Strength, Dexterity: st.current.Dexterity },

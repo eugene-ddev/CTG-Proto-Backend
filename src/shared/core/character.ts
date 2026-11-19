@@ -2,6 +2,7 @@
 // (таб «Статы», «Бой», «Снаряжение»). Чистые функции без Phaser.
 import { COMBAT, getBlueprint, getItem, hasItem, maxStackOf as stackOf, weaponStrike } from '../data/catalog';
 import { weaponLevelName } from '../data/weaponLooks';
+import { resolveSkin } from '../data/skins';
 import { STATS, type CharacterBlueprint, type EquipmentItem, type Item, type Stat } from '../data/types';
 import { disassemblyRefund } from './craft';
 import { addCubes, addItem, uid, type CharacterState, type EquippedItem, type InventoryEntry, type PlayerState } from './state';
@@ -149,9 +150,9 @@ export function slotLabel(bp: CharacterBlueprint, slot: SlotRef): string {
   return `Артефакт ${n}`;
 }
 
-/** Подходит ли предмет в слот по типу. Подсумок не используется — его никуда не надеть. */
+/** Подходит ли предмет в слот по типу. Рюкзак встроен в персонажа и не надевается как предмет. */
 export function slotAccepts(bp: CharacterBlueprint, slot: SlotRef, item: Item): boolean {
-  if (slot === 'rucksack') return item.kind === 'bag' && item.slot === 'Rucksack' && !item.unused;
+  if (slot === 'rucksack') return false;
   const s = bp.slots[slot];
   if (!s) return false;
   if (s.type === 'Hand') return item.kind === 'weapon' && item.slot === 'Hand';
@@ -159,14 +160,14 @@ export function slotAccepts(bp: CharacterBlueprint, slot: SlotRef, item: Item): 
   return false;
 }
 
-/** Все слоты персонажа по порядку: слоты чертежа, затем рюкзак. */
+/** Все слоты снаряжения персонажа по порядку. */
 export function allSlots(bp: CharacterBlueprint): SlotRef[] {
-  return [...bp.slots.map((_, i) => i), 'rucksack'];
+  return bp.slots.map((_, i) => i);
 }
 
 /** Можно ли надеть предмет вообще (тип подходит хоть в один слот). */
 export function isEquippable(item: Item): boolean {
-  return (item.kind === 'weapon' || item.kind === 'artifact' || (item.kind === 'bag' && !item.unused && item.slot === 'Rucksack'));
+  return item.kind === 'weapon' || item.kind === 'artifact';
 }
 
 export function validName(name: string): string | null {
@@ -231,9 +232,9 @@ function updateCharacter(s: PlayerState, charUid: string, fn: (c: CharacterState
   return { ...ns, characters: ns.characters.map((x) => (x.uid === charUid ? nc : x)) };
 }
 
-const slotGet = (c: CharacterState, slot: SlotRef) => (slot === 'rucksack' ? c.rucksack : c.equipment[slot] ?? null);
+const slotGet = (c: CharacterState, slot: SlotRef) => slot === 'rucksack' ? null : c.equipment[slot] ?? null;
 const slotSet = (c: CharacterState, slot: SlotRef, it: EquippedItem | null): CharacterState =>
-  slot === 'rucksack' ? { ...c, rucksack: it } : { ...c, equipment: c.equipment.map((x, i) => (i === slot ? it : x)) };
+  slot === 'rucksack' ? c : { ...c, equipment: c.equipment.map((x, i) => (i === slot ? it : x)) };
 
 /** Надеть предмет из инвентаря; то, что было в слоте, возвращается в инвентарь. */
 export function equip(s: PlayerState, charUid: string, slot: SlotRef, invUid: string): PlayerState | null {
@@ -246,13 +247,8 @@ export function equip(s: PlayerState, charUid: string, slot: SlotRef, invUid: st
     if (requirementGap(item, characterStats(bp, c.blockStats)) > 0) return null;
     const taken = takeFromInventory(st, invUid);
     if (!taken) return null;
-    let next = putBack(taken[1], slotGet(c, slot));
-    let nc = slotSet(c, slot, taken[0]);
-    if (slot === 'rucksack' && item.kind === 'bag') {
-      // рюкзак сменили на меньший — что не поместилось, уходит в инвентарь
-      next = emptyBag(next, c.bag.slice(item.capacity));
-      nc = { ...nc, bag: c.bag.slice(0, item.capacity) };
-    }
+    const next = putBack(taken[1], slotGet(c, slot));
+    const nc = slotSet(c, slot, taken[0]);
     return [nc, next];
   });
 }
@@ -279,22 +275,24 @@ export function unequip(s: PlayerState, charUid: string, slot: SlotRef): PlayerS
   return updateCharacter(s, charUid, (c, st) => {
     const it = slotGet(c, slot);
     if (!it) return null;
-    let next = putBack(st, it);
-    let nc = slotSet(c, slot, null);
-    if (slot === 'rucksack') {
-      // снятый рюкзак отдаёт содержимое в инвентарь
-      next = emptyBag(next, c.bag);
-      nc = { ...nc, bag: [] };
-    }
+    const next = putBack(st, it);
+    const nc = slotSet(c, slot, null);
     return [nc, next];
   });
 }
 
-/** Вместимость надетого рюкзака (0 — рюкзака нет). */
+/** Вместимость постоянного рюкзака персонажа. */
 export function bagCapacity(c: CharacterState): number {
-  if (!c.rucksack || !hasItem(c.rucksack.itemId)) return 0;
-  const it = getItem(c.rucksack.itemId);
-  return it.kind === 'bag' ? it.capacity : 0;
+  const levels = COMBAT.characterUpgrades.rucksackLevels;
+  const level = Number.isInteger(c.rucksackLevel) ? c.rucksackLevel : 1;
+  return levels[Math.max(0, Math.min(levels.length - 1, level - 1))].capacity;
+}
+
+/** Предмет-модель текущего уровня рюкзака (для иконки и снимка противника). */
+export function rucksackItemId(c: CharacterState): string {
+  const levels = COMBAT.characterUpgrades.rucksackLevels;
+  const level = Number.isInteger(c.rucksackLevel) ? c.rucksackLevel : 1;
+  return levels[Math.max(0, Math.min(levels.length - 1, level - 1))].itemId;
 }
 
 /** Ячейки рюкзака нужной длины. */
@@ -303,8 +301,8 @@ export function bagSlots(c: CharacterState): Array<InventoryEntry | null> {
   return Array.from({ length: n }, (_, i) => c.bag?.[i] ?? null);
 }
 
-/** Что можно положить в рюкзак: зелья и снаряжение (лут, запасное оружие на серию). */
-export const bagAccepts = (item: Item) => item.kind === 'potion' || item.kind === 'weapon' || item.kind === 'artifact' || item.kind === 'resource';
+/** Что можно положить в рюкзак: снаряжение и ресурсы. Зелья встроены в персонажа. */
+export const bagAccepts = (item: Item) => item.kind === 'weapon' || item.kind === 'artifact' || item.kind === 'resource';
 
 const maxStackOf = (itemId: string) => stackOf(itemId);
 
@@ -355,7 +353,7 @@ export function putInBag(s: PlayerState, charUid: string, cell: number, invUid: 
 }
 
 /**
- * Переложить внутри рюкзака из ячейки from в to: в пустую — переезжает, на то же зелье — докладывается
+ * Переложить внутри рюкзака из ячейки from в to: в пустую — переезжает, на тот же ресурс — докладывается
  * до максимума стопки (остаток остаётся на месте), на другое — меняются местами. Можно и в серии арены.
  */
 export function moveInBag(s: PlayerState, charUid: string, from: number, to: number): PlayerState | null {
@@ -410,6 +408,14 @@ export function setCharacterTarget(s: PlayerState, charUid: string, target: Stat
   return updateCharacter(s, charUid, (c, st) => [{ ...c, target: [...target] }, st], true);
 }
 
+/** Выбрать скин, существующий для чертежа этого персонажа. */
+export function setCharacterSkin(s: PlayerState, charUid: string, skinId: string): PlayerState | null {
+  return updateCharacter(s, charUid, (c, st) => {
+    const skin = resolveSkin(c.blueprintId, skinId);
+    return skin?.id === skinId && !skin.locked ? [{ ...c, skinId }, st] : null;
+  });
+}
+
 export function renameCharacter(s: PlayerState, charUid: string, name: string): PlayerState | null {
   const n = validName(name);
   if (!n) return null;
@@ -426,13 +432,13 @@ export function disassembleCharacter(s: PlayerState, charUid: string): PlayerSta
   const c = s.characters.find((x) => x.uid === charUid);
   if (!c || busy(s, charUid)) return null;
   let next: PlayerState = addCubes({ ...s, characters: s.characters.filter((x) => x.uid !== charUid) }, characterRefund(c));
-  for (const it of [...c.equipment, c.rucksack]) next = putBack(next, it);
+  for (const it of c.equipment) next = putBack(next, it);
   next = emptyBag(next, c.bag);
   if (next.lastArenaCharacterId === charUid) next = { ...next, lastArenaCharacterId: null };
   return next;
 }
 
-/** Предметы инвентаря, которые можно надеть хоть куда-нибудь (зелья, камни, подсумок — нет). */
+/** Предметы инвентаря, которые можно надеть хоть куда-нибудь (камни и ресурсы — нет). */
 export function equippableEntries(s: PlayerState): PlayerState['inventory'] {
   return s.inventory.filter((e) => hasItem(e.itemId) && isEquippable(getItem(e.itemId)));
 }

@@ -3,16 +3,17 @@
 //   вышел раньше — лут остаётся, награды нет;
 // - проигранный бой можно переиграть ARENA.retries раз за серию: тот же противник, боец — как до боя, ничего не пропадает;
 //   повторы кончились (или игрок сдался) — поражение;
-// - после победы игрок сам перетаскивает лут противника (оружие, артефакты, рюкзак, осколки) в свой рюкзак,
+// - после победы игрок сам перетаскивает лут противника (оружие, артефакты, содержимое рюкзака, осколки) в свой рюкзак,
 //   сколько влезет; дальше либо выходит, либо идёт дальше;
-// - поражение: надетое оружие и рюкзак (с содержимым) пропадают;
-// - пока боец на арене (идёт серия), разбитые кубы не чинятся — только зельем из рюкзака;
+// - поражение с потерей: надетое оружие и содержимое рюкзака пропадают, уровень рюкзака остаётся;
+// - пока боец на арене (идёт серия), разбитые кубы не чинятся — только встроенным зельем;
 //   вне арены восстанавливаются со временем, в том числе при закрытой игре.
 // Чистые функции над PlayerState, как и остальное ядро.
 import { ARENA, COMBAT, ITEMS, OPPONENTS, getBlueprint, getItem, hasItem, maxStackOf } from '../data/catalog';
-import type { ArenaConfig, CharacterBlueprint, EquipmentItem, Item, Stat } from '../data/types';
-import { bagSlots, characterStats, discardFromBag, itemOf, lv, requirementGap } from './character';
-import { SHARD_ID, addCubes, addItem, itemCount, spendCubes, takeItems, uid, type CharacterState, type PlayerState } from './state';
+import { resolveSkin } from '../data/skins';
+import type { ArenaConfig, CharacterBlueprint, EquipmentItem, Stat } from '../data/types';
+import { bagSlots, characterStats, discardFromBag, itemOf, lv, requirementGap, rucksackItemId } from './character';
+import { SHARD_ID, addCubes, addItem, itemCount, potionItemOf, refillCharacterPotions, spendCubes, takeItems, uid, type CharacterState, type PlayerState } from './state';
 import { createRng, randomSeed } from './rng';
 import { clockNow } from './clock';
 import { RATING_START, ratingDeltas } from './rating';
@@ -41,6 +42,8 @@ export interface ArenaOpponent {
 export interface FighterSnapshot {
   charName: string;
   blueprintId: string;
+  /** Скин владельца — визуальный, переносится со снимком для PvP. */
+  skinId?: string;
   blockStats: Stat[];
   equipment: Array<{ itemId: string; level?: number; cells?: number; gems?: string[] } | null>;
   target?: Stat[];
@@ -101,10 +104,11 @@ export function snapshotOf(c: CharacterState): FighterSnapshot {
   return {
     charName: c.name,
     blueprintId: c.blueprintId,
+    skinId: resolveSkin(c.blueprintId, c.skinId)?.id,
     blockStats: [...c.blockStats],
     equipment: c.equipment.map((e) => (e && hasItem(e.itemId) ? pick(e) : null)),
     ...(c.target ? { target: [...c.target] } : {}),
-    rucksack: c.rucksack?.itemId ?? null,
+    rucksack: rucksackItemId(c),
     bag: (c.bag ?? []).filter((e): e is NonNullable<typeof e> => !!e && hasItem(e.itemId)).map((e) => ({ itemId: e.itemId, count: e.count })),
   };
 }
@@ -209,7 +213,7 @@ export function grantReward(s: PlayerState, r: SeriesReward): PlayerState {
   return next;
 }
 
-/** Предмет лута: снаряжение (с уровнем экземпляра), стопка зелий или осколков. */
+/** Предмет лута: снаряжение (с уровнем экземпляра) или стопка ресурсов. */
 export interface LootEntry {
   itemId: string;
   count: number;
@@ -223,8 +227,8 @@ export interface LootEntry {
 /** Лут побеждённого: надетое оружие и артефакты, содержимое рюкзака и осколки разбитых кубов. */
 export function enemyLoot(equipment: ReadonlyArray<{ id: string; itemLevel: number; gemSlots?: number; gems?: string[] } | null>, bag: ReadonlyArray<{ itemId: string; count: number }>, brokenCubes: number): LootEntry[] {
   const out: LootEntry[] = [];
-  for (const e of equipment) if (e && hasItem(e.id)) out.push({ itemId: e.id, count: 1, level: e.itemLevel, ...(e.gemSlots ? { cells: e.gemSlots } : {}), ...(e.gems?.length ? { gems: [...e.gems] } : {}) });
-  for (const e of bag) if (hasItem(e.itemId) && e.count > 0) out.push({ itemId: e.itemId, count: e.count });
+  for (const e of equipment) if (e && hasItem(e.id) && getItem(e.id).kind !== 'bag' && getItem(e.id).kind !== 'potion') out.push({ itemId: e.id, count: 1, level: e.itemLevel, ...(e.gemSlots ? { cells: e.gemSlots } : {}), ...(e.gems?.length ? { gems: [...e.gems] } : {}) });
+  for (const e of bag) if (hasItem(e.itemId) && getItem(e.itemId).kind !== 'bag' && getItem(e.itemId).kind !== 'potion' && e.count > 0) out.push({ itemId: e.itemId, count: e.count });
   if (brokenCubes > 0) out.push({ itemId: SHARD_ID, count: brokenCubes });
   return out;
 }
@@ -425,13 +429,13 @@ export const setLossRule = (rule: typeof lossOverride) => (lossOverride = rule);
 export const lossRule = (mode: ArenaRun['mode']): 'keep' | 'drop' => (lossOverride ?? ARENA.loss ?? { bots: 'drop', players: 'drop' })[mode === 'players' ? 'players' : 'bots'];
 
 /**
- * Поражение в серии — серия закрыта. По правилу вида серии (lossRule): drop — пропадают надетое оружие и рюкзак
- * (с содержимым), артефакты остаются; keep — всё остаётся у бойца.
+ * Поражение в серии — серия закрыта. По правилу вида серии (lossRule): drop — пропадают надетое оружие и
+ * содержимое рюкзака, артефакты и уровень рюкзака остаются; keep — всё остаётся у бойца.
  */
 function applyLoss(s: PlayerState, charUid: string): FightOutcome {
   let c = charOf(s, charUid)!;
   if (lossRule(s.arenaRun?.mode) === 'keep') {
-    c = { ...c, lobbySince: c.brokenBlocks.length ? clockNow() : undefined };
+    c = refillCharacterPotions({ ...c, lobbySince: c.brokenBlocks.length ? clockNow() : undefined });
     return { state: { ...withChar(s, c), arenaRun: null }, lost: [] };
   }
   const bp = getBlueprint(c.blueprintId) as CharacterBlueprint;
@@ -443,9 +447,8 @@ function applyLoss(s: PlayerState, charUid: string): FightOutcome {
     }
     return e;
   });
-  if (c.rucksack) lost.push(c.rucksack.itemId);
   for (const e of c.bag ?? []) if (e) lost.push(e.itemId);
-  c = { ...c, equipment, rucksack: null, bag: [], lobbySince: c.brokenBlocks.length ? clockNow() : undefined };
+  c = refillCharacterPotions({ ...c, equipment, bag: [], lobbySince: c.brokenBlocks.length ? clockNow() : undefined });
   return { state: { ...withChar(s, c), arenaRun: null }, lost };
 }
 
@@ -463,7 +466,7 @@ export function endRun(s: PlayerState): PlayerState {
   const c = charOf(s, run.charUid);
   const next: PlayerState = { ...s, arenaRun: null, loot: null };
   // восстановление начинается с выхода с арены
-  return c ? withChar(next, { ...c, lobbySince: c.brokenBlocks.length ? clockNow() : undefined }) : next;
+  return c ? withChar(next, refillCharacterPotions({ ...c, lobbySince: c.brokenBlocks.length ? clockNow() : undefined })) : next;
 }
 
 /** Перезагрузка посреди боя — поражение. */
@@ -487,70 +490,30 @@ export const inRun = (s: PlayerState, charUid: string) => s.arenaRun?.charUid ==
 
 // ───────────── зелья ─────────────
 
-/** Сколько кубов зелье починит у бойца прямо сейчас (0 — нечего чинить). */
-export function potionEffect(c: CharacterState, item: Item): number {
+/** Сколько кубов встроенное зелье статы починит прямо сейчас (0 — нечего чинить). */
+export function potionEffect(c: CharacterState, stat: Stat): number {
+  const item = potionItemOf(c, stat);
   if (item.kind !== 'potion') return 0;
-  const broken = c.brokenBlocks.filter((i) => c.blockStats[i] === item.restoreStat).length;
+  const broken = c.brokenBlocks.filter((i) => c.blockStats[i] === stat).length;
   return Math.min(item.restoreAmount, broken);
 }
 
-/** Откуда пьётся зелье: стопка в инвентаре или ячейка рюкзака бойца. */
-export type PotionSource = { kind: 'inv'; uid: string } | { kind: 'bag'; cell: number };
-
-/**
- * Выпить зелье: чинит разбитые кубы его статы (prefer — сначала этот куб).
- * В лобби — из инвентаря или рюкзака; боец в серии арены пьёт только из рюкзака.
- */
-export function drinkPotion(s: PlayerState, charUid: string, src: PotionSource, prefer?: number): PlayerState | null {
+/** Выпить встроенное зелье: один заряд чинит кубы его статы (prefer — сначала этот куб). */
+export function drinkPotion(s: PlayerState, charUid: string, stat: Stat, prefer?: number): PlayerState | null {
   const c = charOf(s, charUid);
-  if (!c) return null;
-  let next: PlayerState = s;
-  let entry;
-  let slots = bagSlots(c);
-  if (src.kind === 'bag') {
-    entry = slots[src.cell];
-  } else {
-    if (inRun(s, charUid)) return null;
-    entry = s.inventory.find((e) => e.uid === src.uid);
-  }
-  if (!entry || !hasItem(entry.itemId)) return null;
-  const item = getItem(entry.itemId);
-  if (item.kind !== 'potion') return null;
-  const n = potionEffect(c, item);
+  if (!c || !c.potions[stat] || c.potions[stat].charges <= 0) return null;
+  const n = potionEffect(c, stat);
   if (n <= 0) return null;
-  const pool = c.brokenBlocks.filter((i) => c.blockStats[i] === item.restoreStat);
+  const pool = c.brokenBlocks.filter((i) => c.blockStats[i] === stat);
   if (prefer !== undefined && pool.includes(prefer)) pool.splice(pool.indexOf(prefer), 1), pool.unshift(prefer);
   const fix = new Set(pool.slice(0, n));
-  if (src.kind === 'bag') {
-    slots = [...slots];
-    slots[src.cell] = entry.count > 1 ? { ...entry, count: entry.count - 1 } : null;
-  } else {
-    const uidE = entry.uid;
-    next = { ...next, inventory: next.inventory.map((e) => (e.uid === uidE ? { ...e, count: e.count - 1 } : e)).filter((e) => e.count > 0) };
-  }
   const brokenBlocks = c.brokenBlocks.filter((i) => !fix.has(i));
-  return withChar(next, { ...c, bag: src.kind === 'bag' ? slots : c.bag, brokenBlocks, lobbySince: brokenBlocks.length ? c.lobbySince : undefined });
-}
-
-/** Выпить зелье из ячейки рюкзака. */
-export const drinkFromBag = (s: PlayerState, charUid: string, cell: number) => drinkPotion(s, charUid, { kind: 'bag', cell });
-
-/** Зелья статы, которые боец может выпить сейчас: из рюкзака и (вне серии) из инвентаря. */
-export function potionSources(s: PlayerState, c: CharacterState, stat: Stat): Array<{ src: PotionSource; itemId: string; count: number }> {
-  const out: Array<{ src: PotionSource; itemId: string; count: number }> = [];
-  bagSlots(c).forEach((e, cell) => {
-    if (e && hasItem(e.itemId)) {
-      const it = getItem(e.itemId);
-      if (it.kind === 'potion' && it.restoreStat === stat) out.push({ src: { kind: 'bag', cell }, itemId: e.itemId, count: e.count });
-    }
+  return withChar(s, {
+    ...c,
+    potions: { ...c.potions, [stat]: { ...c.potions[stat], charges: c.potions[stat].charges - 1 } },
+    brokenBlocks,
+    lobbySince: brokenBlocks.length ? c.lobbySince : undefined,
   });
-  if (!inRun(s, c.uid))
-    for (const e of s.inventory) {
-      if (!hasItem(e.itemId)) continue;
-      const it = getItem(e.itemId);
-      if (it.kind === 'potion' && it.restoreStat === stat) out.push({ src: { kind: 'inv', uid: e.uid }, itemId: e.itemId, count: e.count });
-    }
-  return out;
 }
 
 /**
@@ -658,7 +621,7 @@ export function activeCharacter(s: PlayerState): CharacterState | null {
 
 /**
  * Сколько кубов стоит починить n разбитых кубов статы — как если бы собрать для этого зелья:
- * самый дешёвый набор флаконов (малый чинит 1, большой — 3), что покрывает n.
+ * самый дешёвый набор флаконов (малый чинит 3, большой — 5), что покрывает n.
  */
 export function repairCostForStat(stat: Stat, n: number): number {
   if (n <= 0) return 0;
@@ -681,7 +644,7 @@ export function repairCost(c: CharacterState): number {
   return sum;
 }
 
-/** Починить бойца полностью за кубы из инвентаря. На арене — нельзя (там только зелья из рюкзака). */
+/** Починить бойца полностью за кубы из инвентаря. На арене — нельзя (там только встроенные зелья). */
 export function repairAll(s: PlayerState, charUid: string): PlayerState | null {
   const c = charOf(s, charUid);
   if (!c || !c.brokenBlocks.length || s.arenaRun?.charUid === charUid) return null;
