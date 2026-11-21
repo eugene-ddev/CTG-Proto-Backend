@@ -32,7 +32,7 @@ export const dodgeChance = (luck: number, dex: number) => procChance(0.8 * luck 
 /** Доля физ. урона, которую режет броня (против атакующего уровня attackerLevel), не больше 85%. */
 export function armorAbsorb(armor: number, attackerLevel = 1): number {
   if (armor <= 0) return 0;
-  return Math.min(armor / (armor + 50 * (1 + 0.35 * (attackerLevel - 1))), 0.85);
+  return Math.min(armor / (armor + 12 * (1 + 0.35 * (attackerLevel - 1))), 0.85);
 }
 
 /** Scaling из формулы урона: 70% от статы (эталон 100), 30% от уровня предмета (эталон 20). */

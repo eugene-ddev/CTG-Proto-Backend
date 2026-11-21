@@ -15,7 +15,6 @@ import type { ArenaConfig, CharacterBlueprint, EquipmentItem, Stat } from '../da
 import { bagSlots, characterStats, discardFromBag, itemOf, lv, requirementGap, rucksackItemId } from './character';
 import { SHARD_ID, addCubes, addItem, itemCount, potionItemOf, refillCharacterPotions, spendCubes, takeItems, uid, type CharacterState, type PlayerState } from './state';
 import { createRng, randomSeed } from './rng';
-import { clockNow } from './clock';
 import { RATING_START, ratingDeltas } from './rating';
 import { playerWeaponLevel, recordOpponent } from './opponent';
 import { bagDraws, drawInt, replayDraws, rngDraws, type Bags, type DrawLog, type DrawSource } from './bag';
@@ -387,15 +386,15 @@ export function finishFight(s: PlayerState, r: FightResult): FightOutcome | null
     if (retriesLeft(run) > 0) {
       return { state: { ...s, arenaRun: { ...run, inBattle: false, retriesUsed: (run.retriesUsed ?? 0) + 1 } }, lost: [], retry: true };
     }
-    return applyLoss(withChar(s, { ...c0, brokenBlocks: [...r.brokenBlocks].sort((a, b) => a - b) }), run.charUid);
+    return applyLoss(s, run.charUid);
   }
-  const c: CharacterState = { ...c0, brokenBlocks: [...r.brokenBlocks].sort((a, b) => a - b) };
   // лут не падает сам — игрок забирает его в окне победы (takeLoot), в том числе после конца серии
   if (run.fight >= SERIES_LENGTH) {
     const bags = cloneBags(s);
     const reward = rollSeriesReward(r.seed ^ 0x5e71e5, ARENA, bagDraws(bags, createRng(r.seed ^ 0x5e71e5), COMBAT.bagSize));
-    return { state: grantReward(endRun({ ...withChar(s, c), bags }), reward), lost: [], reward };
+    return { state: grantReward(endRun({ ...s, bags }), reward), lost: [], reward };
   }
+  const c: CharacterState = { ...c0, brokenBlocks: [...r.brokenBlocks].sort((a, b) => a - b) };
   // следующий противник выбирается сразу после победы — под оружие, с которым боец вышел из боя
   const next = chooseOpponent(withChar(s, c), c, createRng(r.seed ^ 0x0bb0).int(1, 0x7fffffff), run.fight + 1);
   return {
@@ -411,13 +410,13 @@ export function finishFight(s: PlayerState, r: FightResult): FightOutcome | null
 /** Бой серии с игроками: повторов нет; после победы соперник следующего боя выбирается заново (startPvp). */
 function finishPvpFight(s0: PlayerState, run: ArenaRun, c0: CharacterState, r: FightResult): FightOutcome {
   const s = settlePvp(s0, run, r.win, r.seed);
-  const c: CharacterState = { ...c0, brokenBlocks: [...r.brokenBlocks].sort((a, b) => a - b) };
-  if (!r.win) return applyLoss(withChar(s, c), run.charUid);
+  if (!r.win) return applyLoss(s, run.charUid);
   if (run.fight >= SERIES_LENGTH) {
     const bags = cloneBags(s);
     const reward = rollSeriesReward(r.seed ^ 0x5e71e5, ARENA, bagDraws(bags, createRng(r.seed ^ 0x5e71e5), COMBAT.bagSize));
-    return { state: grantReward(endRun({ ...withChar(s, c), bags }), reward), lost: [], reward };
+    return { state: grantReward(endRun({ ...s, bags }), reward), lost: [], reward };
   }
+  const c: CharacterState = { ...c0, brokenBlocks: [...r.brokenBlocks].sort((a, b) => a - b) };
   const { opp: _opp, ...rest } = run;
   return { state: { ...withChar(s, c), arenaRun: { ...rest, fight: run.fight + 1, wins: run.wins + 1, inBattle: false } }, lost: [] };
 }
@@ -428,15 +427,18 @@ let lossOverride: { bots: 'keep' | 'drop'; players: 'keep' | 'drop' } | null = n
 export const setLossRule = (rule: typeof lossOverride) => (lossOverride = rule);
 export const lossRule = (mode: ArenaRun['mode']): 'keep' | 'drop' => (lossOverride ?? ARENA.loss ?? { bots: 'drop', players: 'drop' })[mode === 'players' ? 'players' : 'bots'];
 
+function restoreAfterRun(c: CharacterState): CharacterState {
+  return refillCharacterPotions({ ...c, brokenBlocks: [], lobbySince: undefined });
+}
+
 /**
  * Поражение в серии — серия закрыта. По правилу вида серии (lossRule): drop — пропадают надетое оружие и
  * содержимое рюкзака, артефакты и уровень рюкзака остаются; keep — всё остаётся у бойца.
  */
 function applyLoss(s: PlayerState, charUid: string): FightOutcome {
-  let c = charOf(s, charUid)!;
+  const c = charOf(s, charUid)!;
   if (lossRule(s.arenaRun?.mode) === 'keep') {
-    c = refillCharacterPotions({ ...c, lobbySince: c.brokenBlocks.length ? clockNow() : undefined });
-    return { state: { ...withChar(s, c), arenaRun: null }, lost: [] };
+    return { state: { ...withChar(s, restoreAfterRun(c)), arenaRun: null }, lost: [] };
   }
   const bp = getBlueprint(c.blueprintId) as CharacterBlueprint;
   const lost: string[] = [];
@@ -448,8 +450,8 @@ function applyLoss(s: PlayerState, charUid: string): FightOutcome {
     return e;
   });
   for (const e of c.bag ?? []) if (e) lost.push(e.itemId);
-  c = refillCharacterPotions({ ...c, equipment, bag: [], lobbySince: c.brokenBlocks.length ? clockNow() : undefined });
-  return { state: { ...withChar(s, c), arenaRun: null }, lost };
+  const restored = restoreAfterRun({ ...c, equipment, bag: [] });
+  return { state: { ...withChar(s, restored), arenaRun: null }, lost };
 }
 
 /** Сдаться: принять поражение в серии, не тратя оставшиеся повторы. */
@@ -465,8 +467,7 @@ export function endRun(s: PlayerState): PlayerState {
   if (!run) return s;
   const c = charOf(s, run.charUid);
   const next: PlayerState = { ...s, arenaRun: null, loot: null };
-  // восстановление начинается с выхода с арены
-  return c ? withChar(next, refillCharacterPotions({ ...c, lobbySince: c.brokenBlocks.length ? clockNow() : undefined })) : next;
+  return c ? withChar(next, restoreAfterRun(c)) : next;
 }
 
 /** Перезагрузка посреди боя — поражение. */
